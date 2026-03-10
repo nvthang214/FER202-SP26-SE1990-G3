@@ -324,6 +324,24 @@ class JsonServerService {
 
   setAuthPersistence = async () => null;
 
+  // USER ACTIONS --------------
+
+  getUsers = async () => {
+    const users = await this.request("/users");
+    return users.map(({ password, ...rest }) => rest);
+  };
+
+  updateUser = (id, updates) =>
+    this.request(`/users/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updates),
+    });
+
+  deleteUser = (id) =>
+    this.request(`/users/${id}`, {
+      method: "DELETE",
+    });
+
   // PRODUCT ACTIONS --------------
 
   getSingleProduct = async (id) => {

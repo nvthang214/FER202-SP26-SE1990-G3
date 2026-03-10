@@ -1,0 +1,31 @@
+.admin-users-controls {
+  display: flex;
+  align-items: center;
+  gap: $s-size;
+
+  .searchbar {
+    width: 260px;
+  }
+}
+
+.admin-users-header {
+  padding: $m-size $s-size;
+  font-weight: bold;
+}
+
+.admin-user-item {
+  padding: $s-size;
+}
+
+.admin-user-cell {
+  display: flex;
+  align-items: center;
+  gap: $s-size;
+}
+
+.admin-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
