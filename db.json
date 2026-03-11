@@ -134,6 +134,50 @@
       "role": "USER",
       "dateJoined": "2026-03-03T05:06:00.296Z",
       "provider": "google.com"
+    },
+    {
+      "id": "03d4e13b-54f2-48ca-bb97-595a46dfaae9",
+      "email": "ngtoan554@gmail.com",
+      "password": "Nguyentoan554",
+      "provider": "password",
+      "basket": [
+        {
+          "id": "product-008",
+          "name": "Betsin Maalat Canvas Tote",
+          "brand": "Betsin Maalat",
+          "price": 190000,
+          "maxQuantity": 30,
+          "description": "Daily canvas tote with reinforced handles and roomy interior.",
+          "keywords": [
+            "bag",
+            "tote",
+            "canvas"
+          ],
+          "sizes": [
+            40
+          ],
+          "isFeatured": false,
+          "isRecommended": true,
+          "availableColors": [
+            "#f3f4f6",
+            "#374151"
+          ],
+          "quantity": 1,
+          "name_lower": "betsin maalat canvas tote",
+          "dateAdded": 1708970000000,
+          "image": "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=800&q=80",
+          "imageCollection": [
+            {
+              "id": "product-008-a",
+              "url": "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=800&q=80"
+            }
+          ],
+          "selectedColor": "",
+          "selectedSize": 40
+        }
+      ],
+      "role": "USER",
+      "dateJoined": "2026-03-05T01:29:37.240Z"
     }
   ],
   "products": [

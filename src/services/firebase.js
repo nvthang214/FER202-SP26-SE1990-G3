@@ -372,39 +372,57 @@ class JsonServerService {
   };
 
   searchProducts = async (searchKey) => {
-    const normalizedSearch = searchKey.trim().toLowerCase();
-    const keywords = normalizedSearch.split(" ").filter(Boolean);
-    const products = await this.request("/products");
+  const q = searchKey.trim().toLowerCase();
+  if (!q) return { products: [], lastKey: null, total: 0 };
 
-    const startsWithMatches = products.filter((product) =>
-      (product.name_lower || "").startsWith(normalizedSearch),
-    );
-    const keywordMatches = products.filter(
-      (product) =>
-        Array.isArray(product.keywords) &&
-        product.keywords.some((keyword) =>
-          keywords.includes(String(keyword).toLowerCase()),
-        ),
-    );
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const allProducts = await this.request("/products");
 
-    const merged = [...startsWithMatches, ...keywordMatches];
-    const uniqueProducts = Object.values(
-      merged.reduce((acc, product) => {
-        acc[product.id] = product;
-        return acc;
-      }, {}),
-    );
+  const scoreProduct = (product) => {
+    const name       = (product.name_lower || product.name || "").toLowerCase();
+    const brand      = (product.brand || "").toLowerCase();
+    const desc       = (product.description || "").toLowerCase();
+    const kws        = (product.keywords || []).map((k) => String(k).toLowerCase());
+    const nameWords  = name.split(/\s+/);
+    const brandWords = brand.split(/\s+/);
 
-    const limitedProducts = uniqueProducts.slice(0, 12);
+    let score = 0;
 
-    return {
-      products: limitedProducts,
-      lastKey: limitedProducts.length
-        ? limitedProducts[limitedProducts.length - 1].id
-        : null,
-      total: uniqueProducts.length,
-    };
+    for (const token of tokens) {
+      if (name === q)                  { score += 200; continue; }
+      if (brand === q)                 { score += 150; continue; }
+
+      if (nameWords.includes(token))   { score += 80;  continue; }
+      if (brandWords.includes(token))  { score += 60;  continue; }
+
+      if (name.startsWith(q))            score += 100;
+      else if (name.startsWith(token))   score += 50;
+
+      if (name.includes(token))          score += 40;
+      if (brand.includes(token))         score += 30;
+      if (kws.includes(token))           score += 25;
+      if (kws.some((k) => k.includes(token))) score += 15;
+      if (desc.includes(token))          score += 10;
+    }
+
+    return score;
   };
+
+  const scored = allProducts
+    .map((p) => ({ product: p, score: scoreProduct(p) }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  const matchedProducts = scored.map(({ product }) => product);
+
+  return {
+    products: matchedProducts,
+    lastKey: matchedProducts.length
+      ? matchedProducts[matchedProducts.length - 1].id
+      : null,
+    total: matchedProducts.length,
+  };
+};
 
   getFeaturedProducts = async (itemsCount = 12) => {
     const products = await this.request("/products");
