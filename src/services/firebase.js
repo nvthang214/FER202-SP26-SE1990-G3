@@ -177,7 +177,41 @@ class JsonServerService {
     return { user: authUser };
   };
 
-  signInWithGoogle = () => this.socialSignIn("google.com", "Google");
+  signInWithGoogle = async (googleUser = null) => {
+    if (googleUser && googleUser.email) {
+      const existingUsers = await this.request(
+        `/users?email=${encodeURIComponent(googleUser.email)}`,
+      );
+
+      let authUser;
+      if (existingUsers.length > 0) {
+        authUser = this.createAuthUser(existingUsers[0]);
+      } else {
+        const id = this.generateKey();
+        const user = await this.request("/users", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+            email: googleUser.email,
+            fullname: googleUser.fullname || "Google User",
+            avatar: googleUser.avatar || "",
+            provider: "google.com",
+            basket: [],
+            role: "USER",
+            dateJoined: new Date().toISOString(),
+          }),
+        });
+        authUser = this.createAuthUser(user);
+      }
+
+      this.auth.currentUser = authUser;
+      this.persistSession(authUser.uid);
+      this.notifyAuthListeners();
+      return { user: authUser };
+    }
+
+    return this.socialSignIn("google.com", "Google");
+  };
 
   signInWithFacebook = () => this.socialSignIn("facebook.com", "Facebook");
 

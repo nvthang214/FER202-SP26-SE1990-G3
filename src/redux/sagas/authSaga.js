@@ -87,7 +87,7 @@ function* authSaga({ type, payload }) {
     case SIGNIN_WITH_GOOGLE:
       try {
         yield initRequest();
-        yield call(firebase.signInWithGoogle);
+        yield call(firebase.signInWithGoogle, payload);
       } catch (e) {
         yield handleError(e);
       }

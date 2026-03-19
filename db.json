@@ -29,11 +29,20 @@
           "price": 150000,
           "maxQuantity": 35,
           "description": "6-panel cap with adjustable strap and subtle embroidered logo.",
-          "keywords": ["cap", "hat", "accessory"],
-          "sizes": [56],
+          "keywords": [
+            "cap",
+            "hat",
+            "accessory"
+          ],
+          "sizes": [
+            56
+          ],
           "isFeatured": false,
           "isRecommended": false,
-          "availableColors": ["#111111", "#ffffff"],
+          "availableColors": [
+            "#111111",
+            "#ffffff"
+          ],
           "quantity": 1,
           "name_lower": "black kibal minimal cap",
           "dateAdded": 1708990000000,
@@ -91,11 +100,20 @@
           "price": 150000,
           "maxQuantity": 35,
           "description": "6-panel cap with adjustable strap and subtle embroidered logo.",
-          "keywords": ["cap", "hat", "accessory"],
-          "sizes": [56],
+          "keywords": [
+            "cap",
+            "hat",
+            "accessory"
+          ],
+          "sizes": [
+            56
+          ],
           "isFeatured": false,
           "isRecommended": false,
-          "availableColors": ["#111111", "#ffffff"],
+          "availableColors": [
+            "#111111",
+            "#ffffff"
+          ],
           "quantity": 1,
           "name_lower": "black kibal minimal cap",
           "dateAdded": 1708990000000,
@@ -116,6 +134,16 @@
       "role": "USER",
       "dateJoined": "2026-03-03T05:06:00.296Z",
       "provider": "google.com"
+    },
+    {
+      "id": "2c200e1e-8a92-416f-96eb-37a5333f7ce1",
+      "email": "thangnvse180367@fpt.edu.vn",
+      "fullname": "Nguyen Van Thang (K18 HCM)",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJtttmPAqqXWZI_A87EhdQbEc4MS-17Xw7ma9EaSdE497Jrag=s96-c",
+      "provider": "google.com",
+      "basket": [],
+      "role": "USER",
+      "dateJoined": "2026-03-12T03:57:32.931Z"
     }
   ],
   "products": [
@@ -126,11 +154,22 @@
       "price": 390000,
       "maxQuantity": 12,
       "description": "Heavyweight hoodie with clean embroidery details and comfortable cotton blend.",
-      "keywords": ["hoodie", "streetwear", "salt"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "hoodie",
+        "streetwear",
+        "salt"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#000000", "#f5f5f5"],
+      "availableColors": [
+        "#000000",
+        "#f5f5f5"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat hoodie",
       "dateAdded": 1708900000000,
@@ -153,11 +192,23 @@
       "price": 450000,
       "maxQuantity": 10,
       "description": "Lightweight windbreaker built for daily movement and layered fits.",
-      "keywords": ["jacket", "windbreaker", "black"],
-      "sizes": [38, 40, 42, 44],
+      "keywords": [
+        "jacket",
+        "windbreaker",
+        "black"
+      ],
+      "sizes": [
+        38,
+        40,
+        42,
+        44
+      ],
       "isFeatured": true,
       "isRecommended": false,
-      "availableColors": ["#111111", "#1e3a8a"],
+      "availableColors": [
+        "#111111",
+        "#1e3a8a"
+      ],
       "quantity": 1,
       "name_lower": "black kibal windbreaker",
       "dateAdded": 1708910000000,
@@ -176,11 +227,23 @@
       "price": 250000,
       "maxQuantity": 20,
       "description": "Classic-fit tee with soft touch and breathable everyday fabric.",
-      "keywords": ["tee", "shirt", "everyday"],
-      "sizes": [36, 38, 40, 42],
+      "keywords": [
+        "tee",
+        "shirt",
+        "everyday"
+      ],
+      "sizes": [
+        36,
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#ffffff", "#ef4444"],
+      "availableColors": [
+        "#ffffff",
+        "#ef4444"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb everyday tee",
       "dateAdded": 1708920000000,
@@ -199,11 +262,23 @@
       "price": 520000,
       "maxQuantity": 16,
       "description": "Relaxed fit cargo pants with utility pockets and durable fabric.",
-      "keywords": ["pants", "cargo", "utility"],
-      "sizes": [38, 40, 42, 44],
+      "keywords": [
+        "pants",
+        "cargo",
+        "utility"
+      ],
+      "sizes": [
+        38,
+        40,
+        42,
+        44
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#2f2f2f", "#556b2f"],
+      "availableColors": [
+        "#2f2f2f",
+        "#556b2f"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat cargo pants",
       "dateAdded": 1708930000000,
@@ -226,11 +301,22 @@
       "price": 480000,
       "maxQuantity": 14,
       "description": "Midweight overshirt made for layering in changing weather.",
-      "keywords": ["overshirt", "layer", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "overshirt",
+        "layer",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#d6d3d1", "#1f2937"],
+      "availableColors": [
+        "#d6d3d1",
+        "#1f2937"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat overshirt",
       "dateAdded": 1708940000000,
@@ -249,11 +335,23 @@
       "price": 360000,
       "maxQuantity": 18,
       "description": "Soft knit polo with modern silhouette for smart casual looks.",
-      "keywords": ["polo", "knit", "casual"],
-      "sizes": [36, 38, 40, 42],
+      "keywords": [
+        "polo",
+        "knit",
+        "casual"
+      ],
+      "sizes": [
+        36,
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#111827", "#9ca3af"],
+      "availableColors": [
+        "#111827",
+        "#9ca3af"
+      ],
       "quantity": 1,
       "name_lower": "black kibal knit polo",
       "dateAdded": 1708950000000,
@@ -272,11 +370,23 @@
       "price": 610000,
       "maxQuantity": 11,
       "description": "Washed denim jacket with classic hardware and structured fit.",
-      "keywords": ["jacket", "denim", "outerwear"],
-      "sizes": [38, 40, 42, 44],
+      "keywords": [
+        "jacket",
+        "denim",
+        "outerwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42,
+        44
+      ],
       "isFeatured": true,
       "isRecommended": false,
-      "availableColors": ["#1e40af", "#1f2937"],
+      "availableColors": [
+        "#1e40af",
+        "#1f2937"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb denim jacket",
       "dateAdded": 1708960000000,
@@ -299,11 +409,20 @@
       "price": 190000,
       "maxQuantity": 30,
       "description": "Daily canvas tote with reinforced handles and roomy interior.",
-      "keywords": ["bag", "tote", "canvas"],
-      "sizes": [40],
+      "keywords": [
+        "bag",
+        "tote",
+        "canvas"
+      ],
+      "sizes": [
+        40
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#f3f4f6", "#374151"],
+      "availableColors": [
+        "#f3f4f6",
+        "#374151"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat canvas tote",
       "dateAdded": 1708970000000,
@@ -322,11 +441,23 @@
       "price": 300000,
       "maxQuantity": 22,
       "description": "Breathable trail shorts with secure zip pockets and stretch waist.",
-      "keywords": ["shorts", "trail", "active"],
-      "sizes": [36, 38, 40, 42],
+      "keywords": [
+        "shorts",
+        "trail",
+        "active"
+      ],
+      "sizes": [
+        36,
+        38,
+        40,
+        42
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#0f172a", "#f59e0b"],
+      "availableColors": [
+        "#0f172a",
+        "#f59e0b"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat trail shorts",
       "dateAdded": 1708980000000,
@@ -345,11 +476,20 @@
       "price": 150000,
       "maxQuantity": 35,
       "description": "6-panel cap with adjustable strap and subtle embroidered logo.",
-      "keywords": ["cap", "hat", "accessory"],
-      "sizes": [56],
+      "keywords": [
+        "cap",
+        "hat",
+        "accessory"
+      ],
+      "sizes": [
+        56
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#111111", "#ffffff"],
+      "availableColors": [
+        "#111111",
+        "#ffffff"
+      ],
       "quantity": 1,
       "name_lower": "black kibal minimal cap",
       "dateAdded": 1708990000000,
@@ -368,11 +508,22 @@
       "price": 367000,
       "maxQuantity": 21,
       "description": "Tee from Black Kibal with daily-wear comfort and clean silhouette.",
-      "keywords": ["tee", "black", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "tee",
+        "black",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#22c55e", "#d1d5db"],
+      "availableColors": [
+        "#22c55e",
+        "#d1d5db"
+      ],
       "quantity": 1,
       "name_lower": "black kibal tee 11",
       "dateAdded": 1709011000000,
@@ -395,11 +546,22 @@
       "price": 384000,
       "maxQuantity": 22,
       "description": "Jacket from Salt Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["jacket", "salt", "streetwear"],
-      "sizes": [36, 38, 40],
+      "keywords": [
+        "jacket",
+        "salt",
+        "streetwear"
+      ],
+      "sizes": [
+        36,
+        38,
+        40
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#f59e0b", "#000000"],
+      "availableColors": [
+        "#f59e0b",
+        "#000000"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat jacket 12",
       "dateAdded": 1709012000000,
@@ -422,11 +584,22 @@
       "price": 401000,
       "maxQuantity": 23,
       "description": "Cargo Pants from Betsin Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["cargo", "betsin", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "cargo",
+        "betsin",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#2563eb", "#111827"],
+      "availableColors": [
+        "#2563eb",
+        "#111827"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat cargo pants 13",
       "dateAdded": 1709013000000,
@@ -449,11 +622,22 @@
       "price": 418000,
       "maxQuantity": 24,
       "description": "Overshirt from Sexbomb with daily-wear comfort and clean silhouette.",
-      "keywords": ["overshirt", "sexbomb", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "overshirt",
+        "sexbomb",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#d1d5db", "#ffffff"],
+      "availableColors": [
+        "#d1d5db",
+        "#ffffff"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb overshirt 14",
       "dateAdded": 1709014000000,
@@ -476,11 +660,22 @@
       "price": 435000,
       "maxQuantity": 25,
       "description": "Trail Shorts from Black Kibal with daily-wear comfort and clean silhouette.",
-      "keywords": ["trail", "black", "streetwear"],
-      "sizes": [36, 38, 40],
+      "keywords": [
+        "trail",
+        "black",
+        "streetwear"
+      ],
+      "sizes": [
+        36,
+        38,
+        40
+      ],
       "isFeatured": true,
       "isRecommended": false,
-      "availableColors": ["#000000", "#ef4444"],
+      "availableColors": [
+        "#000000",
+        "#ef4444"
+      ],
       "quantity": 1,
       "name_lower": "black kibal trail shorts 15",
       "dateAdded": 1709015000000,
@@ -503,11 +698,22 @@
       "price": 452000,
       "maxQuantity": 26,
       "description": "Knit Polo from Salt Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["knit", "salt", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "knit",
+        "salt",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#111827", "#22c55e"],
+      "availableColors": [
+        "#111827",
+        "#22c55e"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat knit polo 16",
       "dateAdded": 1709016000000,
@@ -530,11 +736,20 @@
       "price": 469000,
       "maxQuantity": 27,
       "description": "Minimal Cap from Betsin Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["minimal", "betsin", "streetwear"],
-      "sizes": [56],
+      "keywords": [
+        "minimal",
+        "betsin",
+        "streetwear"
+      ],
+      "sizes": [
+        56
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#ffffff", "#f59e0b"],
+      "availableColors": [
+        "#ffffff",
+        "#f59e0b"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat minimal cap 17",
       "dateAdded": 1709017000000,
@@ -557,11 +772,20 @@
       "price": 486000,
       "maxQuantity": 28,
       "description": "Canvas Tote from Sexbomb with daily-wear comfort and clean silhouette.",
-      "keywords": ["canvas", "sexbomb", "streetwear"],
-      "sizes": [40],
+      "keywords": [
+        "canvas",
+        "sexbomb",
+        "streetwear"
+      ],
+      "sizes": [
+        40
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#ef4444", "#2563eb"],
+      "availableColors": [
+        "#ef4444",
+        "#2563eb"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb canvas tote 18",
       "dateAdded": 1709018000000,
@@ -584,11 +808,22 @@
       "price": 503000,
       "maxQuantity": 29,
       "description": "Denim from Black Kibal with daily-wear comfort and clean silhouette.",
-      "keywords": ["denim", "black", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "denim",
+        "black",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#22c55e", "#d1d5db"],
+      "availableColors": [
+        "#22c55e",
+        "#d1d5db"
+      ],
       "quantity": 1,
       "name_lower": "black kibal denim 19",
       "dateAdded": 1709019000000,
@@ -611,11 +846,22 @@
       "price": 520000,
       "maxQuantity": 30,
       "description": "Hoodie from Salt Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["hoodie", "salt", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "hoodie",
+        "salt",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#f59e0b", "#000000"],
+      "availableColors": [
+        "#f59e0b",
+        "#000000"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat hoodie 20",
       "dateAdded": 1709020000000,
@@ -638,11 +884,22 @@
       "price": 537000,
       "maxQuantity": 31,
       "description": "Tee from Betsin Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["tee", "betsin", "streetwear"],
-      "sizes": [36, 38, 40],
+      "keywords": [
+        "tee",
+        "betsin",
+        "streetwear"
+      ],
+      "sizes": [
+        36,
+        38,
+        40
+      ],
       "isFeatured": true,
       "isRecommended": false,
-      "availableColors": ["#2563eb", "#111827"],
+      "availableColors": [
+        "#2563eb",
+        "#111827"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat tee 21",
       "dateAdded": 1709021000000,
@@ -665,11 +922,22 @@
       "price": 554000,
       "maxQuantity": 32,
       "description": "Jacket from Sexbomb with daily-wear comfort and clean silhouette.",
-      "keywords": ["jacket", "sexbomb", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "jacket",
+        "sexbomb",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#d1d5db", "#ffffff"],
+      "availableColors": [
+        "#d1d5db",
+        "#ffffff"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb jacket 22",
       "dateAdded": 1709022000000,
@@ -692,11 +960,22 @@
       "price": 571000,
       "maxQuantity": 33,
       "description": "Cargo Pants from Black Kibal with daily-wear comfort and clean silhouette.",
-      "keywords": ["cargo", "black", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "cargo",
+        "black",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#000000", "#ef4444"],
+      "availableColors": [
+        "#000000",
+        "#ef4444"
+      ],
       "quantity": 1,
       "name_lower": "black kibal cargo pants 23",
       "dateAdded": 1709023000000,
@@ -719,11 +998,22 @@
       "price": 588000,
       "maxQuantity": 34,
       "description": "Overshirt from Salt Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["overshirt", "salt", "streetwear"],
-      "sizes": [36, 38, 40],
+      "keywords": [
+        "overshirt",
+        "salt",
+        "streetwear"
+      ],
+      "sizes": [
+        36,
+        38,
+        40
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#111827", "#22c55e"],
+      "availableColors": [
+        "#111827",
+        "#22c55e"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat overshirt 24",
       "dateAdded": 1709024000000,
@@ -746,11 +1036,22 @@
       "price": 605000,
       "maxQuantity": 10,
       "description": "Trail Shorts from Betsin Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["trail", "betsin", "streetwear"],
-      "sizes": [38, 40, 42],
+      "keywords": [
+        "trail",
+        "betsin",
+        "streetwear"
+      ],
+      "sizes": [
+        38,
+        40,
+        42
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#ffffff", "#f59e0b"],
+      "availableColors": [
+        "#ffffff",
+        "#f59e0b"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat trail shorts 25",
       "dateAdded": 1709025000000,
@@ -773,11 +1074,22 @@
       "price": 622000,
       "maxQuantity": 11,
       "description": "Knit Polo from Sexbomb with daily-wear comfort and clean silhouette.",
-      "keywords": ["knit", "sexbomb", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "knit",
+        "sexbomb",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#ef4444", "#2563eb"],
+      "availableColors": [
+        "#ef4444",
+        "#2563eb"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb knit polo 26",
       "dateAdded": 1709026000000,
@@ -800,11 +1112,20 @@
       "price": 639000,
       "maxQuantity": 12,
       "description": "Minimal Cap from Black Kibal with daily-wear comfort and clean silhouette.",
-      "keywords": ["minimal", "black", "streetwear"],
-      "sizes": [56],
+      "keywords": [
+        "minimal",
+        "black",
+        "streetwear"
+      ],
+      "sizes": [
+        56
+      ],
       "isFeatured": true,
       "isRecommended": false,
-      "availableColors": ["#22c55e", "#d1d5db"],
+      "availableColors": [
+        "#22c55e",
+        "#d1d5db"
+      ],
       "quantity": 1,
       "name_lower": "black kibal minimal cap 27",
       "dateAdded": 1709027000000,
@@ -827,11 +1148,20 @@
       "price": 656000,
       "maxQuantity": 13,
       "description": "Canvas Tote from Salt Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["canvas", "salt", "streetwear"],
-      "sizes": [40],
+      "keywords": [
+        "canvas",
+        "salt",
+        "streetwear"
+      ],
+      "sizes": [
+        40
+      ],
       "isFeatured": false,
       "isRecommended": true,
-      "availableColors": ["#f59e0b", "#000000"],
+      "availableColors": [
+        "#f59e0b",
+        "#000000"
+      ],
       "quantity": 1,
       "name_lower": "salt maalat canvas tote 28",
       "dateAdded": 1709028000000,
@@ -854,11 +1184,22 @@
       "price": 673000,
       "maxQuantity": 14,
       "description": "Denim from Betsin Maalat with daily-wear comfort and clean silhouette.",
-      "keywords": ["denim", "betsin", "streetwear"],
-      "sizes": [40, 42, 44],
+      "keywords": [
+        "denim",
+        "betsin",
+        "streetwear"
+      ],
+      "sizes": [
+        40,
+        42,
+        44
+      ],
       "isFeatured": false,
       "isRecommended": false,
-      "availableColors": ["#2563eb", "#111827"],
+      "availableColors": [
+        "#2563eb",
+        "#111827"
+      ],
       "quantity": 1,
       "name_lower": "betsin maalat denim 29",
       "dateAdded": 1709029000000,
@@ -881,11 +1222,22 @@
       "price": 690000,
       "maxQuantity": 15,
       "description": "Hoodie from Sexbomb with daily-wear comfort and clean silhouette.",
-      "keywords": ["hoodie", "sexbomb", "streetwear"],
-      "sizes": [36, 38, 40],
+      "keywords": [
+        "hoodie",
+        "sexbomb",
+        "streetwear"
+      ],
+      "sizes": [
+        36,
+        38,
+        40
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#d1d5db", "#ffffff"],
+      "availableColors": [
+        "#d1d5db",
+        "#ffffff"
+      ],
       "quantity": 1,
       "name_lower": "sexbomb hoodie 30",
       "dateAdded": 1709030000000,
@@ -908,11 +1260,21 @@
       "price": 12345677,
       "maxQuantity": 200,
       "description": "sdfsdfsdf",
-      "keywords": ["ao", "quan"],
-      "sizes": ["1", "2", "3"],
+      "keywords": [
+        "ao",
+        "quan"
+      ],
+      "sizes": [
+        "1",
+        "2",
+        "3"
+      ],
       "isFeatured": true,
       "isRecommended": true,
-      "availableColors": ["#ce69a4", "#69ce75"],
+      "availableColors": [
+        "#ce69a4",
+        "#69ce75"
+      ],
       "quantity": 1,
       "name_lower": "điện thoại",
       "dateAdded": 1772514046427,
