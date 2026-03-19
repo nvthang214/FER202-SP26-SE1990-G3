@@ -1,0 +1,141 @@
+.admin-stats {
+  padding-top: $m-size;
+  padding-bottom: $l-size;
+}
+
+.admin-stats-loading {
+  font-size: $font-small;
+  color: $gray-01;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $m-size;
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-stats-card {
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: $m-size;
+
+  h4 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $gray-01;
+  }
+
+  p {
+    margin: $s-size 0;
+    font-size: 2rem;
+    font-weight: bold;
+    color: $black;
+  }
+
+  span {
+    font-size: $font-small;
+    color: lighten($black, 25%);
+  }
+}
+
+.admin-stats-card--accent {
+  border-color: $yellow;
+  box-shadow: 0 5px 20px rgba($yellow, 0.15);
+}
+
+.admin-stats-panels {
+  margin-top: $l-size;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $m-size;
+}
+
+.admin-stats-panel {
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: $m-size;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: $m-size;
+  }
+}
+
+.admin-stats-empty {
+  margin: 0;
+  color: $gray-01;
+}
+
+.admin-stats-brand-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-stats-brand-item {
+  margin-bottom: $m-size;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  div:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: $s-size;
+    margin-bottom: 0.6rem;
+  }
+
+  strong {
+    font-size: 1.3rem;
+  }
+
+  span {
+    color: $gray-01;
+    font-size: $font-small;
+  }
+}
+
+.admin-stats-brand-meter {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: $background-color-01;
+  overflow: hidden;
+
+  i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, darken($yellow, 15%), $yellow);
+  }
+}
+
+.admin-stats-kv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  span {
+    color: $gray-01;
+  }
+
+  strong {
+    font-size: 1.6rem;
+  }
+}

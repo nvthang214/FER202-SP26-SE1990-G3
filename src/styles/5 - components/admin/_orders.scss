@@ -1,0 +1,157 @@
+.admin-orders {
+  padding-top: $m-size;
+  padding-bottom: $l-size;
+}
+
+.admin-orders-controls {
+  display: flex;
+  gap: $s-size;
+  align-items: center;
+
+  .search-input {
+    min-width: 280px;
+  }
+
+  @include mobile {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+
+    .search-input {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+}
+
+.admin-orders-list {
+  display: grid;
+  gap: $m-size;
+}
+
+.admin-orders-item {
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: $m-size;
+}
+
+.admin-orders-meta {
+  p {
+    margin: 0 0 0.6rem;
+    word-break: break-word;
+  }
+}
+
+.admin-orders-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 0;
+
+  span {
+    color: $gray-01;
+  }
+
+  strong {
+    font-size: 1.8rem;
+  }
+}
+
+.admin-orders-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.admin-order-link {
+  font-size: inherit;
+  text-decoration: underline;
+  color: $off-black;
+}
+
+.admin-order-status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: $font-small;
+  font-weight: bold;
+  background: $background-color-01;
+}
+
+.admin-order-status--placed,
+.admin-order-status--processing {
+  background: lighten($yellow, 22%);
+  color: darken($yellow, 35%);
+}
+
+.admin-order-status--delivered {
+  background: #d7f7e3;
+  color: #0a7a35;
+}
+
+.admin-order-status--cancelled {
+  background: #ffe3e3;
+  color: #bb1f1f;
+}
+
+.admin-order-modal {
+  h3 {
+    margin-top: 0;
+    margin-bottom: $m-size;
+  }
+
+  h4 {
+    margin: $m-size 0 $s-size;
+  }
+
+  p {
+    margin: 0 0 0.7rem;
+    word-break: break-word;
+  }
+}
+
+.admin-order-modal-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $s-size;
+  margin: $m-size 0;
+
+  > div {
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: $s-size;
+    background: $background-color-01;
+  }
+
+  span {
+    display: block;
+    color: $gray-01;
+    font-size: $font-small;
+    margin-bottom: 0.5rem;
+  }
+
+  strong {
+    font-size: 1.5rem;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-order-modal-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid $border-color;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: $s-size;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid $border-color;
+  }
+}

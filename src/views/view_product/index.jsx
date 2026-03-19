@@ -168,7 +168,7 @@ const ViewProduct = () => {
                 buttonLabel="Try Again"
               />
             ) : (
-              <ProductShowcaseGrid products={recommendedProducts} skeletonCount={3} />
+              <ProductShowcaseGrid products={recommendedProducts} skeletonCount={6} />
             )}
           </div>
         </div>

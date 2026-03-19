@@ -1,60 +1,70 @@
-import { FacebookOutlined, GithubFilled, GoogleOutlined } from '@ant-design/icons';
-import PropType from 'prop-types';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { signInWithFacebook, signInWithGithub, signInWithGoogle } from '@/redux/actions/authActions';
+import { GoogleLogin } from "@react-oauth/google";
+import PropType from "prop-types";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { signInWithGoogle } from "@/redux/actions/authActions";
+import { setAuthStatus } from "@/redux/actions/miscActions";
 
 const SocialLogin = ({ isLoading }) => {
   const dispatch = useDispatch();
 
-  const onSignInWithGoogle = () => {
-    dispatch(signInWithGoogle());
+  const handleGoogleSuccess = (credentialResponse) => {
+    try {
+      const base64Url = credentialResponse.credential.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
+      dispatch(
+        signInWithGoogle({
+          email: payload.email,
+          fullname: payload.name,
+          avatar: payload.picture,
+          googleId: payload.sub,
+        }),
+      );
+    } catch {
+      dispatch(
+        setAuthStatus({
+          success: false,
+          type: "auth",
+          isError: true,
+          message: "Failed to process Google sign in. Please try again.",
+        }),
+      );
+    }
   };
 
-  const onSignInWithFacebook = () => {
-    dispatch(signInWithFacebook());
-  };
-
-  const onSignInWithGithub = () => {
-    dispatch(signInWithGithub());
+  const handleGoogleError = () => {
+    dispatch(
+      setAuthStatus({
+        success: false,
+        type: "auth",
+        isError: true,
+        message: "Google sign in was cancelled or failed.",
+      }),
+    );
   };
 
   return (
     <div className="auth-provider">
-      <button
-        className="button auth-provider-button provider-facebook"
-        disabled={isLoading}
-        onClick={onSignInWithFacebook}
-        type="button"
+      <div
+        className="auth-provider-button provider-google"
+        style={{ display: "flex", justifyContent: "center" }}
       >
-        {/* <i className="fab fa-facebook" /> */}
-        <FacebookOutlined />
-        Continue with Facebook
-      </button>
-      <button
-        className="button auth-provider-button provider-google"
-        disabled={isLoading}
-        onClick={onSignInWithGoogle}
-        type="button"
-      >
-        <GoogleOutlined />
-        Continue with Google
-      </button>
-      <button
-        className="button auth-provider-button provider-github"
-        disabled={isLoading}
-        onClick={onSignInWithGithub}
-        type="button"
-      >
-        <GithubFilled />
-        Continue with GitHub
-      </button>
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          text="continue_with"
+          shape="rectangular"
+          size="large"
+          width="280"
+        />
+      </div>
     </div>
   );
 };
 
 SocialLogin.propTypes = {
-  isLoading: PropType.bool.isRequired
+  isLoading: PropType.bool.isRequired,
 };
 
 export default SocialLogin;

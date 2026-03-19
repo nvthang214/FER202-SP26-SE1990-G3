@@ -1,14 +1,19 @@
 /* eslint-disable react/forbid-prop-types */
-import { Boundary, MessageDisplay } from '@/components/common';
-import PropType from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setLoading } from '@/redux/actions/miscActions';
-import { getProducts } from '@/redux/actions/productActions';
+import { Boundary, MessageDisplay } from "@/components/common";
+import PropType from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/actions/miscActions";
+import { getProducts } from "@/redux/actions/productActions";
 
 const ProductList = (props) => {
   const {
-    products, filteredProducts, isLoading, requestStatus, children
+    products,
+    filteredProducts,
+    isLoading,
+    requestStatus,
+    children,
+    showMore,
   } = props;
   const [isFetching, setFetching] = useState(false);
   const dispatch = useDispatch();
@@ -33,12 +38,15 @@ const ProductList = (props) => {
 
   if (filteredProducts.length === 0 && !isLoading) {
     return (
-      <MessageDisplay message={requestStatus?.message || 'No products found.'} />
+      <MessageDisplay
+        message={requestStatus?.message || "No products found."}
+      />
     );
-  } if (filteredProducts.length === 0 && requestStatus) {
+  }
+  if (filteredProducts.length === 0 && requestStatus) {
     return (
       <MessageDisplay
-        message={requestStatus?.message || 'Something went wrong :('}
+        message={requestStatus?.message || "Something went wrong :("}
         action={fetchProducts}
         buttonLabel="Try Again"
       />
@@ -48,7 +56,7 @@ const ProductList = (props) => {
     <Boundary>
       {children}
       {/* Show 'Show More' button if products length is less than total products */}
-      {products.items.length < products.total && (
+      {showMore && products.items.length < products.total && (
         <div className="d-flex-center padding-l">
           <button
             className="button button-small"
@@ -56,7 +64,7 @@ const ProductList = (props) => {
             onClick={fetchProducts}
             type="button"
           >
-            {isFetching ? 'Fetching Items...' : 'Show More Items'}
+            {isFetching ? "Fetching Items..." : "Show More Items"}
           </button>
         </div>
       )}
@@ -65,7 +73,8 @@ const ProductList = (props) => {
 };
 
 ProductList.defaultProps = {
-  requestStatus: null
+  requestStatus: null,
+  showMore: true,
 };
 
 ProductList.propTypes = {
@@ -73,10 +82,9 @@ ProductList.propTypes = {
   filteredProducts: PropType.array.isRequired,
   isLoading: PropType.bool.isRequired,
   requestStatus: PropType.string,
-  children: PropType.oneOfType([
-    PropType.arrayOf(PropType.node),
-    PropType.node
-  ]).isRequired
+  showMore: PropType.bool,
+  children: PropType.oneOfType([PropType.arrayOf(PropType.node), PropType.node])
+    .isRequired,
 };
 
 export default ProductList;

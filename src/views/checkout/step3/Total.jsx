@@ -1,14 +1,14 @@
-import { ArrowLeftOutlined, CheckOutlined } from '@ant-design/icons';
-import { CHECKOUT_STEP_2 } from '@/constants/routes';
-import { useFormikContext } from 'formik';
-import { displayMoney } from '@/helpers/utils';
-import PropType from 'prop-types';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { setPaymentDetails } from '@/redux/actions/checkoutActions';
+import { ArrowLeftOutlined, CheckOutlined } from "@ant-design/icons";
+import { CHECKOUT_STEP_2 } from "@/constants/routes";
+import { useFormikContext } from "formik";
+import { displayMoney } from "@/helpers/utils";
+import PropType from "prop-types";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { setPaymentDetails } from "@/redux/actions/checkoutActions";
 
-const Total = ({ isInternational, subtotal }) => {
+const Total = ({ isInternational, isSubmitting, subtotal }) => {
   const { values, submitForm } = useFormikContext();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -37,18 +37,16 @@ const Total = ({ isInternational, subtotal }) => {
           type="button"
         >
           <ArrowLeftOutlined />
-          &nbsp;
-          Go Back
+          &nbsp; Go Back
         </button>
         <button
           className="button"
-          disabled={false}
+          disabled={isSubmitting}
           onClick={submitForm}
           type="button"
         >
           <CheckOutlined />
-          &nbsp;
-          Confirm
+          &nbsp; Confirm
         </button>
       </div>
     </>
@@ -57,7 +55,12 @@ const Total = ({ isInternational, subtotal }) => {
 
 Total.propTypes = {
   isInternational: PropType.bool.isRequired,
-  subtotal: PropType.number.isRequired
+  isSubmitting: PropType.bool,
+  subtotal: PropType.number.isRequired,
+};
+
+Total.defaultProps = {
+  isSubmitting: false,
 };
 
 export default Total;
