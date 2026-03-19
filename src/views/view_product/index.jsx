@@ -30,7 +30,7 @@ const ViewProduct = () => {
     fetchRecommendedProducts,
     isLoading: isLoadingFeatured,
     error: errorFeatured
-  } = useRecommendedProducts(4);
+  } = useRecommendedProducts(6);
   const colorOverlay = useRef(null);
 
   useEffect(() => {
@@ -154,7 +154,7 @@ const ViewProduct = () => {
                 buttonLabel="Try Again"
               />
             ) : (
-              <ProductShowcaseGrid products={recommendedProducts} skeletonCount={3} />
+              <ProductShowcaseGrid products={recommendedProducts} skeletonCount={6} />
             )}
           </div>
         </div>
