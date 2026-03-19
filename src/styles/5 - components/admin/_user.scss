@@ -6,6 +6,29 @@
   .searchbar {
     width: 260px;
   }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: stretch;
+
+    .searchbar {
+      width: 100%;
+    }
+  }
+}
+
+.admin-role-tabs {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  @include mobile {
+    width: 100%;
+
+    .button {
+      flex: 1;
+    }
+  }
 }
 
 .admin-users-header {
@@ -28,4 +51,39 @@
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.admin-user-role {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: $font-small;
+  font-weight: bold;
+}
+
+.admin-user-role--admin {
+  background: lighten($yellow, 20%);
+  color: darken($yellow, 35%);
+}
+
+.admin-user-role--super_admin {
+  background: #ffe4cc;
+  color: #a65c00;
+}
+
+.admin-user-role--user {
+  background: $background-color-01;
+  color: $gray-01;
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-role-history-note {
+  display: block;
+  margin-top: 0.4rem;
+  color: $gray-10;
 }

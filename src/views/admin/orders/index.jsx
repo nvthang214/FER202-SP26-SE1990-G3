@@ -7,6 +7,10 @@ import React, { useEffect, useMemo, useState } from "react";
 const formatCurrency = (value) =>
   `${Math.round(value || 0).toLocaleString("vi-VN")} đ`;
 
+const normalizeStatus = (status = "") => String(status).toUpperCase();
+const isFinalStatus = (status = "") =>
+  ["DELIVERED", "CANCELLED"].includes(normalizeStatus(status));
+
 const orderTotal = (order) => {
   if (typeof order.total === "number") {
     return order.total;
@@ -98,6 +102,27 @@ const AdminOrders = () => {
         return;
       }
 
+      const targetOrder = (
+        Array.isArray(targetUser.orders) ? targetUser.orders : []
+      ).find((order) => order.id === orderId);
+
+      if (!targetOrder) {
+        return;
+      }
+
+      if (isFinalStatus(targetOrder.status)) {
+        displayActionMessage(
+          "Delivered or cancelled orders cannot be changed anymore",
+          "error",
+        );
+        return;
+      }
+
+      if (normalizeStatus(targetOrder.status) === normalizeStatus(status)) {
+        displayActionMessage("Order is already in this status", "info");
+        return;
+      }
+
       const nextOrders = (
         Array.isArray(targetUser.orders) ? targetUser.orders : []
       ).map((order) =>
@@ -122,6 +147,18 @@ const AdminOrders = () => {
             : user,
         ),
       );
+
+      setSelectedOrder((prev) => {
+        if (!prev || prev.id !== orderId) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          status,
+          updatedAt: new Date().toISOString(),
+        };
+      });
 
       displayActionMessage("Order status updated", "success");
     } catch (_) {
@@ -174,73 +211,86 @@ const AdminOrders = () => {
           </div>
         ) : (
           <div className="admin-orders-list">
-            {orders.map((order) => (
-              <article className="admin-orders-item" key={order.id}>
-                <div className="admin-orders-meta">
-                  <p>
-                    <strong>Order:</strong>{" "}
+            {orders.map((order) => {
+              const currentStatus = normalizeStatus(order.status || "PLACED");
+              const isLocked = isFinalStatus(currentStatus);
+
+              return (
+                <article className="admin-orders-item" key={order.id}>
+                  <div className="admin-orders-meta">
+                    <p>
+                      <strong>Order:</strong>{" "}
+                      <button
+                        className="button-link admin-order-link"
+                        onClick={() => openOrderModal(order)}
+                        type="button"
+                      >
+                        {order.id}
+                      </button>
+                    </p>
+                    <p>
+                      <strong>Customer:</strong> {order.customer?.name} (
+                      {order.customer?.email})
+                    </p>
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {order.createdAt ? displayDate(order.createdAt) : "-"}
+                    </p>
+                  </div>
+
+                  <div className="admin-orders-summary">
+                    <span>
+                      {Array.isArray(order.items) ? order.items.length : 0}{" "}
+                      products
+                    </span>
+                    <strong>{formatCurrency(orderTotal(order))}</strong>
+                  </div>
+
+                  <div className="admin-orders-actions">
+                    <span
+                      className={`admin-order-status admin-order-status--${String(order.status || "PLACED").toLowerCase()}`}
+                    >
+                      {order.status || "PLACED"}
+                    </span>
                     <button
-                      className="button-link admin-order-link"
-                      onClick={() => openOrderModal(order)}
+                      className="button button-small button-border"
+                      disabled={isLocked || currentStatus === "PROCESSING"}
+                      onClick={() =>
+                        updateOrderStatus(order.id, order.userId, "PROCESSING")
+                      }
                       type="button"
                     >
-                      {order.id}
+                      Mark Processing
                     </button>
-                  </p>
-                  <p>
-                    <strong>Customer:</strong> {order.customer?.name} (
-                    {order.customer?.email})
-                  </p>
-                  <p>
-                    <strong>Date:</strong>{" "}
-                    {order.createdAt ? displayDate(order.createdAt) : "-"}
-                  </p>
-                </div>
-
-                <div className="admin-orders-summary">
-                  <span>
-                    {Array.isArray(order.items) ? order.items.length : 0}{" "}
-                    products
-                  </span>
-                  <strong>{formatCurrency(orderTotal(order))}</strong>
-                </div>
-
-                <div className="admin-orders-actions">
-                  <span
-                    className={`admin-order-status admin-order-status--${String(order.status || "PLACED").toLowerCase()}`}
-                  >
-                    {order.status || "PLACED"}
-                  </span>
-                  <button
-                    className="button button-small button-border"
-                    onClick={() =>
-                      updateOrderStatus(order.id, order.userId, "PROCESSING")
-                    }
-                    type="button"
-                  >
-                    Mark Processing
-                  </button>
-                  <button
-                    className="button button-small"
-                    onClick={() =>
-                      updateOrderStatus(order.id, order.userId, "DELIVERED")
-                    }
-                    type="button"
-                  >
-                    Mark Delivered
-                  </button>
-                  <button
-                    className="button button-small button-border"
-                    onClick={() =>
-                      updateOrderStatus(order.id, order.userId, "CANCELLED")
-                    }
-                    type="button"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </article>
-            ))}
+                    <button
+                      className="button button-small"
+                      disabled={isLocked || currentStatus === "DELIVERED"}
+                      onClick={() =>
+                        updateOrderStatus(order.id, order.userId, "DELIVERED")
+                      }
+                      type="button"
+                    >
+                      Mark Delivered
+                    </button>
+                    <button
+                      className="button button-small button-border"
+                      disabled={isLocked || currentStatus === "CANCELLED"}
+                      onClick={() =>
+                        updateOrderStatus(order.id, order.userId, "CANCELLED")
+                      }
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                    {isLocked && (
+                      <small className="admin-orders-locked-note">
+                        Locked status: cannot update anymore.
+                      </small>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

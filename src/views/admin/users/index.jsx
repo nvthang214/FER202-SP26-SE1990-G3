@@ -7,15 +7,22 @@ import firebase from "@/services/firebase";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
+const isAdminRole = (role = "") => {
+  const normalizedRole = String(role).toUpperCase();
+  return normalizedRole === "ADMIN" || normalizedRole === "SUPER_ADMIN";
+};
+
 const Users = () => {
   useDocumentTitle("User List | Salinaka Admin");
   useScrollTop();
 
   const auth = useSelector((state) => state.auth);
+  const profile = useSelector((state) => state.profile);
   const [users, setUsers] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
+  const [updatingRoleId, setUpdatingRoleId] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -38,6 +45,7 @@ const Users = () => {
   const filteredUsers = useMemo(() => {
     const keyword = searchText.trim().toLowerCase();
     return users.filter((user) => {
+      const normalizedRole = String(user.role || "USER").toUpperCase();
       const matchKeyword =
         keyword === "" ||
         (user.fullname && user.fullname.toLowerCase().includes(keyword)) ||
@@ -46,7 +54,9 @@ const Users = () => {
       const matchRole =
         roleFilter === ""
           ? true
-          : (user.role || "").toUpperCase() === roleFilter;
+          : roleFilter === "ADMIN"
+            ? isAdminRole(normalizedRole)
+            : normalizedRole === roleFilter;
       return matchKeyword && matchRole;
     });
   }, [users, searchText, roleFilter]);
@@ -97,6 +107,74 @@ const Users = () => {
     }
   };
 
+  const onToggleRole = async (user) => {
+    const currentRole = (user.role || "USER").toUpperCase();
+    const nextRole = isAdminRole(currentRole) ? "USER" : "ADMIN";
+    const isSuperAdmin =
+      auth?.role === "SUPER_ADMIN" || auth?.id === "admin-001";
+
+    if (user.id === auth?.id) {
+      displayActionMessage("You cannot change your own role", "error");
+      return;
+    }
+
+    if (currentRole === "SUPER_ADMIN" && !isSuperAdmin) {
+      displayActionMessage(
+        "Only SUPER_ADMIN can change SUPER_ADMIN role",
+        "error",
+      );
+      return;
+    }
+
+    if (isAdminRole(currentRole) && nextRole === "USER" && !isSuperAdmin) {
+      displayActionMessage("Only SUPER_ADMIN can demote admin users", "error");
+      return;
+    }
+
+    if (!window.confirm(`Change role to ${nextRole} for this user?`)) {
+      return;
+    }
+
+    try {
+      setUpdatingRoleId(user.id);
+      const nextRoleHistory = [
+        {
+          changedAt: new Date().toISOString(),
+          changedBy: {
+            id: auth?.id || "",
+            email: profile?.email || "",
+            name: profile?.fullname || "",
+            role: auth?.role || "",
+          },
+          previousRole: currentRole,
+          nextRole,
+        },
+        ...(Array.isArray(user.roleHistory) ? user.roleHistory : []),
+      ];
+
+      await firebase.updateUser(user.id, {
+        role: nextRole,
+        roleHistory: nextRoleHistory,
+      });
+      setUsers((prev) =>
+        prev.map((item) =>
+          item.id === user.id
+            ? {
+                ...item,
+                role: nextRole,
+                roleHistory: nextRoleHistory,
+              }
+            : item,
+        ),
+      );
+      displayActionMessage("User role updated", "success");
+    } catch (e) {
+      displayActionMessage("Failed to update role", "error");
+    } finally {
+      setUpdatingRoleId("");
+    }
+  };
+
   return (
     <Boundary>
       <div className="product-admin-header">
@@ -114,15 +192,29 @@ const Users = () => {
               value={searchText}
             />
           </div>
-          <select
-            className="filters-brand"
-            onChange={(e) => setRoleFilter(e.target.value)}
-            value={roleFilter}
-          >
-            <option value="">All Roles</option>
-            <option value="ADMIN">Admin</option>
-            <option value="USER">User</option>
-          </select>
+          <div className="admin-role-tabs" role="tablist">
+            <button
+              className={`button button-small ${roleFilter === "" ? "" : "button-border"}`}
+              onClick={() => setRoleFilter("")}
+              type="button"
+            >
+              All
+            </button>
+            <button
+              className={`button button-small ${roleFilter === "ADMIN" ? "" : "button-border"}`}
+              onClick={() => setRoleFilter("ADMIN")}
+              type="button"
+            >
+              Admin
+            </button>
+            <button
+              className={`button button-small ${roleFilter === "USER" ? "" : "button-border"}`}
+              onClick={() => setRoleFilter("USER")}
+              type="button"
+            >
+              User
+            </button>
+          </div>
         </div>
       </div>
       <div className="product-admin-items">
@@ -159,19 +251,48 @@ const Users = () => {
                       <div className="grid-col text-overflow-ellipsis">
                         {user.email || "-"}
                       </div>
-                      <div className="grid-col">{user.role || "USER"}</div>
+                      <div className="grid-col">
+                        <span
+                          className={`admin-user-role admin-user-role--${String(
+                            user.role || "USER",
+                          ).toLowerCase()}`}
+                        >
+                          {user.role || "USER"}
+                        </span>
+                        {Array.isArray(user.roleHistory) &&
+                          user.roleHistory.length > 0 && (
+                            <small className="admin-role-history-note">
+                              Updated:{" "}
+                              {displayDate(user.roleHistory[0].changedAt)}
+                            </small>
+                          )}
+                      </div>
                       <div className="grid-col">
                         {user.dateJoined ? displayDate(user.dateJoined) : "-"}
                       </div>
                       <div className="grid-col">
-                        <button
-                          className="button button-border button-small"
-                          disabled={user.id === auth?.id}
-                          onClick={() => onDeleteUser(user.id)}
-                          type="button"
-                        >
-                          Delete
-                        </button>
+                        <div className="admin-user-actions">
+                          <button
+                            className="button button-border button-small"
+                            disabled={
+                              user.id === auth?.id || updatingRoleId === user.id
+                            }
+                            onClick={() => onToggleRole(user)}
+                            type="button"
+                          >
+                            {isAdminRole(user.role) ? "Set User" : "Set Admin"}
+                          </button>
+                          <button
+                            className="button button-border button-small"
+                            disabled={
+                              user.id === auth?.id || updatingRoleId === user.id
+                            }
+                            onClick={() => onDeleteUser(user.id)}
+                            type="button"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,18 +1,16 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
-import { AdminNavigation, AdminSideBar } from '@/components/common';
-import PropType from 'prop-types';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import { AdminNavigation, AdminSideBar } from "@/components/common";
+import PropType from "prop-types";
+import React from "react";
+import { connect } from "react-redux";
+import { Redirect, Route } from "react-router-dom";
 
-const AdminRoute = ({
-  isAuth, role, component: Component, ...rest
-}) => (
+const AdminRoute = ({ isAuth, role, component: Component, ...rest }) => (
   <Route
     {...rest}
-    component={(props) => (
-      isAuth && role === 'ADMIN' ? (
+    component={(props) =>
+      isAuth && (role === "ADMIN" || role === "SUPER_ADMIN") ? (
         <>
           <AdminNavigation />
           <main className="content-admin">
@@ -22,19 +20,21 @@ const AdminRoute = ({
             </div>
           </main>
         </>
-      ) : <Redirect to="/" />
-    )}
+      ) : (
+        <Redirect to="/" />
+      )
+    }
   />
 );
 
 const mapStateToProps = ({ auth }) => ({
   isAuth: !!auth,
-  role: auth?.role || ''
+  role: auth?.role || "",
 });
 
 AdminRoute.defaultProps = {
   isAuth: false,
-  role: 'USER'
+  role: "USER",
 };
 
 AdminRoute.propTypes = {
@@ -42,7 +42,7 @@ AdminRoute.propTypes = {
   role: PropType.string,
   component: PropType.func.isRequired,
   // eslint-disable-next-line react/require-default-props
-  rest: PropType.any
+  rest: PropType.any,
 };
 
 export default connect(mapStateToProps)(AdminRoute);
