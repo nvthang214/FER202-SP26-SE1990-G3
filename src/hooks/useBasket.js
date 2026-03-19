@@ -6,16 +6,18 @@ const useBasket = () => {
   const { basket } = useSelector((state) => ({ basket: state.basket }));
   const dispatch = useDispatch();
 
-  const isItemOnBasket = (id) => !!basket.find((item) => item.id === id);
+  const isItemOnBasket = (id) => !!basket.find((item) => item.id === id || item.originalId === id);
 
   const addToBasket = (product) => {
-    if (isItemOnBasket(product.id)) {
-      dispatch(removeFromBasket(product.id));
-      displayActionMessage('Item removed from basket', 'info');
-    } else {
-      dispatch(dispatchAddToBasket(product));
-      displayActionMessage('Item added to basket', 'success');
-    }
+    const variantId = `${product.id}-${product.selectedColor || ''}-${product.selectedSize || ''}`;
+    const itemToAdd = {
+        ...product,
+        id: variantId,
+        originalId: product.id
+    };
+    dispatch(dispatchAddToBasket(itemToAdd));
+    displayActionMessage('Item added to basket', 'success');
+    document.body.classList.add('is-basket-open');
   };
 
   return { basket, isItemOnBasket, addToBasket };

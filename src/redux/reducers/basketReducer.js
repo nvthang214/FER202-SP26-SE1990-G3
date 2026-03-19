@@ -11,8 +11,10 @@ export default (state = [], action) => {
       return action.payload;
     case ADD_TO_BASKET:
       return state.some((product) => product.id === action.payload.id)
-        ? state
-        : [action.payload, ...state];
+        ? state.map((product) => product.id === action.payload.id
+          ? { ...product, quantity: product.quantity + (action.payload.quantity || 1) }
+          : product)
+        : [{ ...action.payload, quantity: action.payload.quantity || 1 }, ...state];
     case REMOVE_FROM_BASKET:
       return state.filter((product) => product.id !== action.payload);
     case CLEAR_BASKET:

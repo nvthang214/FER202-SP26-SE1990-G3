@@ -178,6 +178,64 @@
       ],
       "role": "USER",
       "dateJoined": "2026-03-05T01:29:37.240Z"
+    },
+    {
+      "id": "f9111e81-b24d-49bc-b1e7-ec8f610889f2",
+      "fullname": "Google User",
+      "avatar": "/src/images/defaultAvatar.jpg",
+      "banner": "/src/images/defaultBanner.jpg",
+      "email": "google-f9111e81-b24d-49bc-b1e7-ec8f610889f2@salinaka.local",
+      "address": "",
+      "basket": [
+        {
+          "id": "product-007-#1f2937-40",
+          "name": "Sexbomb Denim Jacket",
+          "brand": "Sexbomb",
+          "price": 610000,
+          "maxQuantity": 11,
+          "description": "Washed denim jacket with classic hardware and structured fit.",
+          "keywords": [
+            "jacket",
+            "denim",
+            "outerwear"
+          ],
+          "sizes": [
+            38,
+            40,
+            42,
+            44
+          ],
+          "isFeatured": true,
+          "isRecommended": false,
+          "availableColors": [
+            "#1e40af",
+            "#1f2937"
+          ],
+          "quantity": 2,
+          "name_lower": "sexbomb denim jacket",
+          "dateAdded": 1708960000000,
+          "image": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=800&q=80",
+          "imageCollection": [
+            {
+              "id": "product-007-a",
+              "url": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+              "id": "product-007-b",
+              "url": "https://images.unsplash.com/photo-1551537482-f2075a1d41f2?auto=format&fit=crop&w=800&q=80"
+            }
+          ],
+          "selectedColor": "#1f2937",
+          "selectedSize": 40,
+          "originalId": "product-007"
+        }
+      ],
+      "mobile": {
+        "data": {}
+      },
+      "role": "USER",
+      "dateJoined": "2026-03-19T01:27:45.551Z",
+      "provider": "google.com"
     }
   ],
   "products": [
@@ -1332,5 +1390,6 @@
         }
       ]
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

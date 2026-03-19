@@ -24,6 +24,7 @@ const ViewProduct = () => {
   const [selectedImage, setSelectedImage] = useState(product?.image || '');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const {
     recommendedProducts,
@@ -49,7 +50,7 @@ const ViewProduct = () => {
   };
 
   const handleAddToBasket = () => {
-    addToBasket({ ...product, selectedColor, selectedSize: selectedSize || product.sizes[0] });
+    addToBasket({ ...product, selectedColor, selectedSize: selectedSize || product.sizes[0], quantity: selectedQuantity });
   };
 
   return (
@@ -131,14 +132,27 @@ const ViewProduct = () => {
                 </div>
               )}
               <h1>{displayMoney(product.price)}</h1>
-              <div className="product-modal-action">
-                <button
-                  className={`button button-small ${isItemOnBasket(product.id) ? 'button-border button-border-gray' : ''}`}
-                  onClick={handleAddToBasket}
-                  type="button"
-                >
-                  {isItemOnBasket(product.id) ? 'Remove From Basket' : 'Add To Basket'}
-                </button>
+              <div className="product-modal-action" style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '2rem' }}>
+                  <span className="text-subtle">Quantity</span>
+                  <br />
+                  <br />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <button type="button" className="button button-small button-border button-border-gray" onClick={() => setSelectedQuantity((prev) => Math.max(1, prev - 1))} style={{ padding: '0 10px' }}>-</button>
+                    <span style={{ margin: '0 15px' }}>{selectedQuantity}</span>
+                    <button type="button" className="button button-small button-border button-border-gray" onClick={() => setSelectedQuantity((prev) => prev + 1)} style={{ padding: '0 10px' }}>+</button>
+                  </div>
+                </div>
+                <div>
+                   <br /><br />
+                   <button
+                     className="button button-small"
+                     onClick={handleAddToBasket}
+                     type="button"
+                   >
+                     Add To Basket
+                   </button>
+                </div>
               </div>
             </div>
           </div>

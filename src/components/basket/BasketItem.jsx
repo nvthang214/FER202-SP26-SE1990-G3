@@ -24,7 +24,7 @@ const BasketItem = ({ product }) => {
           />
         </div>
         <div className="basket-item-details">
-          <Link to={`/product/${product.id}`} onClick={() => document.body.classList.remove('is-basket-open')}>
+          <Link to={`/product/${product.originalId || product.id}`} onClick={() => document.body.classList.remove('is-basket-open')}>
             <h4 className="underline basket-item-name">
               {product.name}
             </h4>
