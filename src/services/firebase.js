@@ -433,9 +433,11 @@ class JsonServerService {
 
   getRecommendedProducts = async (itemsCount = 12) => {
     const products = await this.request("/products");
-    return products
-      .filter((product) => product.isRecommended)
-      .slice(0, itemsCount);
+    const recommendedProducts = products.filter((product) => product.isRecommended);
+    
+    // Shuffle array and return random products
+    const shuffled = recommendedProducts.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, itemsCount);
   };
 
   addProduct = (id, product) =>

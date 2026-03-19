@@ -30,7 +30,7 @@ const ViewProduct = () => {
     fetchRecommendedProducts,
     isLoading: isLoadingFeatured,
     error: errorFeatured
-  } = useRecommendedProducts(6);
+  } = useRecommendedProducts(4);
   const colorOverlay = useRef(null);
 
   useEffect(() => {
