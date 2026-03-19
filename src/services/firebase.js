@@ -382,6 +382,10 @@ class JsonServerService {
     try {
       const product = await this.request(`/products/${id}`);
 
+      if (product?.isDeleted) {
+        return null;
+      }
+
       return product;
     } catch (_) {
       return null;
@@ -390,7 +394,8 @@ class JsonServerService {
 
   getProducts = async (lastRefKey) => {
     const products = await this.request("/products");
-    const sortedProducts = [...products].sort((a, b) =>
+    const activeProducts = products.filter((product) => !product.isDeleted);
+    const sortedProducts = [...activeProducts].sort((a, b) =>
       String(a.id).localeCompare(String(b.id)),
     );
     const limit = 12;
@@ -424,69 +429,85 @@ class JsonServerService {
   };
 
   searchProducts = async (searchKey) => {
-  const q = searchKey.trim().toLowerCase();
-  if (!q) return { products: [], lastKey: null, total: 0 };
+    const q = searchKey.trim().toLowerCase();
+    if (!q) return { products: [], lastKey: null, total: 0 };
 
-  const tokens = q.split(/\s+/).filter(Boolean);
-  const allProducts = await this.request("/products");
+    const tokens = q.split(/\s+/).filter(Boolean);
+    const allProducts = (await this.request("/products")).filter(
+      (product) => !product.isDeleted,
+    );
 
-  const scoreProduct = (product) => {
-    const name       = (product.name_lower || product.name || "").toLowerCase();
-    const brand      = (product.brand || "").toLowerCase();
-    const desc       = (product.description || "").toLowerCase();
-    const kws        = (product.keywords || []).map((k) => String(k).toLowerCase());
-    const nameWords  = name.split(/\s+/);
-    const brandWords = brand.split(/\s+/);
+    const scoreProduct = (product) => {
+      const name = (product.name_lower || product.name || "").toLowerCase();
+      const brand = (product.brand || "").toLowerCase();
+      const desc = (product.description || "").toLowerCase();
+      const kws = (product.keywords || []).map((k) => String(k).toLowerCase());
+      const nameWords = name.split(/\s+/);
+      const brandWords = brand.split(/\s+/);
 
-    let score = 0;
+      let score = 0;
 
-    for (const token of tokens) {
-      if (name === q)                  { score += 200; continue; }
-      if (brand === q)                 { score += 150; continue; }
+      for (const token of tokens) {
+        if (name === q) {
+          score += 200;
+          continue;
+        }
+        if (brand === q) {
+          score += 150;
+          continue;
+        }
 
-      if (nameWords.includes(token))   { score += 80;  continue; }
-      if (brandWords.includes(token))  { score += 60;  continue; }
+        if (nameWords.includes(token)) {
+          score += 80;
+          continue;
+        }
+        if (brandWords.includes(token)) {
+          score += 60;
+          continue;
+        }
 
-      if (name.startsWith(q))            score += 100;
-      else if (name.startsWith(token))   score += 50;
+        if (name.startsWith(q)) score += 100;
+        else if (name.startsWith(token)) score += 50;
 
-      if (name.includes(token))          score += 40;
-      if (brand.includes(token))         score += 30;
-      if (kws.includes(token))           score += 25;
-      if (kws.some((k) => k.includes(token))) score += 15;
-      if (desc.includes(token))          score += 10;
-    }
+        if (name.includes(token)) score += 40;
+        if (brand.includes(token)) score += 30;
+        if (kws.includes(token)) score += 25;
+        if (kws.some((k) => k.includes(token))) score += 15;
+        if (desc.includes(token)) score += 10;
+      }
 
-    return score;
+      return score;
+    };
+
+    const scored = allProducts
+      .map((p) => ({ product: p, score: scoreProduct(p) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score);
+
+    const matchedProducts = scored.map(({ product }) => product);
+
+    return {
+      products: matchedProducts,
+      lastKey: matchedProducts.length
+        ? matchedProducts[matchedProducts.length - 1].id
+        : null,
+      total: matchedProducts.length,
+    };
   };
-
-  const scored = allProducts
-    .map((p) => ({ product: p, score: scoreProduct(p) }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  const matchedProducts = scored.map(({ product }) => product);
-
-  return {
-    products: matchedProducts,
-    lastKey: matchedProducts.length
-      ? matchedProducts[matchedProducts.length - 1].id
-      : null,
-    total: matchedProducts.length,
-  };
-};
 
   getFeaturedProducts = async (itemsCount = 12) => {
     const products = await this.request("/products");
     return products
-      .filter((product) => product.isFeatured)
+      .filter((product) => product.isFeatured && !product.isDeleted)
       .slice(0, itemsCount);
   };
 
   getRecommendedProducts = async (itemsCount = 12) => {
     const products = await this.request("/products");
-    const recommendedProducts = products.filter((product) => product.isRecommended);
-    
+    const recommendedProducts = products.filter(
+      (product) => product.isRecommended && !product.isDeleted,
+    );
+
     // Shuffle array and return random products
     const shuffled = recommendedProducts.sort(() => Math.random() - 0.5);
     return shuffled.slice(0, itemsCount);
@@ -495,7 +516,12 @@ class JsonServerService {
   addProduct = (id, product) =>
     this.request("/products", {
       method: "POST",
-      body: JSON.stringify({ id, ...product }),
+      body: JSON.stringify({
+        id,
+        ...product,
+        isDeleted: false,
+        deletedAt: null,
+      }),
     });
 
   generateKey = () => {
@@ -525,7 +551,11 @@ class JsonServerService {
 
   removeProduct = (id) =>
     this.request(`/products/${id}`, {
-      method: "DELETE",
+      method: "PATCH",
+      body: JSON.stringify({
+        isDeleted: true,
+        deletedAt: new Date().toISOString(),
+      }),
     });
 }
 

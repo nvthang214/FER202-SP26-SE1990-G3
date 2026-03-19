@@ -1,0 +1,165 @@
+.user-orders {
+  padding: $s-size;
+}
+
+.user-orders-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $m-size;
+  margin-bottom: $m-size;
+
+  > div {
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: $m-size;
+    background: $background-color-01;
+  }
+
+  span {
+    color: $gray-01;
+    font-size: $font-small;
+  }
+
+  h4 {
+    margin: 0.6rem 0 0;
+    font-size: 2rem;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.user-orders-list {
+  display: grid;
+  gap: $m-size;
+}
+
+.user-order-item {
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: $m-size;
+}
+
+.user-order-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $s-size;
+
+  h5 {
+    margin: 0;
+    word-break: break-word;
+  }
+}
+
+.user-order-link {
+  font-size: inherit;
+  color: $off-black;
+  text-decoration: underline;
+}
+
+.user-order-products {
+  list-style: none;
+  padding: 0;
+  margin: $s-size 0 0;
+  border-top: 1px solid $border-color;
+}
+
+.user-order-product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $s-size;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid $border-color;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.user-order-status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: $font-small;
+  font-weight: bold;
+  background: $background-color-01;
+}
+
+.user-order-status--placed,
+.user-order-status--processing {
+  background: lighten($yellow, 22%);
+  color: darken($yellow, 35%);
+}
+
+.user-order-status--delivered {
+  background: #d7f7e3;
+  color: #0a7a35;
+}
+
+.user-order-status--cancelled {
+  background: #ffe3e3;
+  color: #bb1f1f;
+}
+
+.user-order-modal {
+  h3 {
+    margin-top: 0;
+    margin-bottom: $m-size;
+  }
+
+  h4 {
+    margin: $m-size 0 $s-size;
+  }
+
+  p {
+    margin: 0 0 0.7rem;
+    word-break: break-word;
+  }
+}
+
+.user-order-modal-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $s-size;
+  margin: $m-size 0;
+
+  > div {
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: $s-size;
+    background: $background-color-01;
+  }
+
+  span {
+    display: block;
+    color: $gray-01;
+    font-size: $font-small;
+    margin-bottom: 0.5rem;
+  }
+
+  strong {
+    font-size: 1.5rem;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.user-order-modal-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid $border-color;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: $s-size;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid $border-color;
+  }
+}
