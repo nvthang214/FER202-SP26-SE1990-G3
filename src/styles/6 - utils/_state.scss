@@ -7,7 +7,7 @@
   color: green;
 }
 
-.is-basket-open {
+.is-basket-open, .is-wishlist-open {
   overflow-y: hidden;
 }
 
@@ -15,7 +15,7 @@
   opacity: 1;
 }
 
-.is-basket-open .basket {
+.is-basket-open .basket, .is-wishlist-open .wishlist {
   transform: translateX(0);
 }
 

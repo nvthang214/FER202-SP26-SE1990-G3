@@ -1,5 +1,4 @@
-/* eslint-disable indent */
-import { FilterOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { FilterOutlined, ShoppingOutlined, HeartOutlined } from '@ant-design/icons';
 import * as ROUTE from '@/constants/routes';
 import logo from '@/images/logo-full.png';
 import React, { useEffect, useRef } from 'react';
@@ -9,7 +8,9 @@ import {
 } from 'react-router-dom';
 import UserAvatar from '@/views/account/components/UserAvatar';
 import BasketToggle from '../basket/BasketToggle';
+import WishlistToggle from '../wishlist/WishlistToggle';
 import Badge from './Badge';
+import { useWishlist } from '@/hooks';
 import FiltersToggle from './FiltersToggle';
 import MobileNavigation from './MobileNavigation';
 import SearchBar from './SearchBar';
@@ -24,6 +25,7 @@ const Navigation = () => {
     isAuthenticating: state.app.isAuthenticating,
     isLoading: state.app.loading
   }));
+  const { wishlist } = useWishlist();
 
   const scrollHandler = () => {
     if (navbar.current && window.screen.width > 480) {
@@ -103,6 +105,22 @@ const Navigation = () => {
               </button>
             )}
           </BasketToggle>
+        </li>
+        <li className="navigation-menu-item">
+          <WishlistToggle>
+            {({ onClickToggle }) => (
+              <button
+                className="button-link navigation-menu-link wishlist-toggle"
+                onClick={onClickToggle}
+                type="button"
+              >
+
+                <Badge count={wishlist.length}>
+                  <HeartOutlined style={{ fontSize: '2.4rem' }} />
+                </Badge>
+              </button>
+            )}
+          </WishlistToggle>
         </li>
         {store.user ? (
           <li className="navigation-menu-item">
