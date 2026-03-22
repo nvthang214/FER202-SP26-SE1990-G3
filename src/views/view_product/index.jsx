@@ -8,7 +8,8 @@ import {
   useDocumentTitle,
   useProduct,
   useRecommendedProducts,
-  useScrollTop
+  useScrollTop,
+  useWishlist
 } from '@/hooks';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -18,6 +19,7 @@ const ViewProduct = () => {
   const { id } = useParams();
   const { product, isLoading, error } = useProduct(id);
   const { addToBasket, isItemOnBasket } = useBasket(id);
+  const { toggleWishlist, isItemOnWishlist } = useWishlist();
   useScrollTop();
   useDocumentTitle(`View ${product?.name || 'Item'}`);
 
@@ -138,6 +140,14 @@ const ViewProduct = () => {
                   type="button"
                 >
                   {isItemOnBasket(product.id) ? 'Remove From Basket' : 'Add To Basket'}
+                </button>
+                <button
+                  className={`button button-small ${isItemOnWishlist(product.id) ? 'button-border button-border-gray' : ''}`}
+                  onClick={() => toggleWishlist(product)}
+                  type="button"
+                  style={{ marginLeft: '10px', backgroundColor: isItemOnWishlist(product.id) ? '' : '#ff4d4f', color: isItemOnWishlist(product.id) ? '' : '#fff', borderColor: isItemOnWishlist(product.id) ? '' : '#ff4d4f' }}
+                >
+                  {isItemOnWishlist(product.id) ? 'Remove From Wishlist' : 'Add To Wishlist'}
                 </button>
               </div>
             </div>

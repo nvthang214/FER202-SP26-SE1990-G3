@@ -1,4 +1,5 @@
 import { Basket } from '@/components/basket';
+import { Wishlist } from '@/components/wishlist';
 import { Footer, Navigation } from '@/components/common';
 import * as ROUTES from '@/constants/routes';
 import { createBrowserHistory } from 'history';
@@ -18,6 +19,7 @@ const AppRouter = () => (
     <>
       <Navigation />
       <Basket />
+      <Wishlist />
       <Switch>
         <Route
           component={view.Search}
