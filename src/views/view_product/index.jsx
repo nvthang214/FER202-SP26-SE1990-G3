@@ -1,20 +1,20 @@
-import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
-import { ColorChooser, ImageLoader, MessageDisplay } from '@/components/common';
-import { ProductShowcaseGrid } from '@/components/product';
-import { ProductReviews } from '@/components/product';
-import { RECOMMENDED_PRODUCTS, SHOP } from '@/constants/routes';
-import { displayMoney } from '@/helpers/utils';
+import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import { ColorChooser, ImageLoader, MessageDisplay } from "@/components/common";
+import { ProductShowcaseGrid } from "@/components/product";
+import { ProductReviews } from "@/components/product";
+import { RECOMMENDED_PRODUCTS, SHOP } from "@/constants/routes";
+import { displayMoney } from "@/helpers/utils";
 import {
   useBasket,
   useDocumentTitle,
   useProduct,
   useRecommendedProducts,
   useScrollTop,
-  useWishlist
-} from '@/hooks';
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import Select from 'react-select';
+  useWishlist,
+} from "@/hooks";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Select from "react-select";
 
 const ViewProduct = () => {
   const { id } = useParams();
@@ -22,18 +22,18 @@ const ViewProduct = () => {
   const { addToBasket, isItemOnBasket } = useBasket(id);
   const { toggleWishlist, isItemOnWishlist } = useWishlist();
   useScrollTop();
-  useDocumentTitle(`View ${product?.name || 'Item'}`);
+  useDocumentTitle(`View ${product?.name || "Item"}`);
 
-  const [selectedImage, setSelectedImage] = useState(product?.image || '');
-  const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedImage, setSelectedImage] = useState(product?.image || "");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const {
     recommendedProducts,
     fetchRecommendedProducts,
     isLoading: isLoadingFeatured,
-    error: errorFeatured
+    error: errorFeatured,
   } = useRecommendedProducts(6);
   const colorOverlay = useRef(null);
 
@@ -53,7 +53,12 @@ const ViewProduct = () => {
   };
 
   const handleAddToBasket = () => {
-    addToBasket({ ...product, selectedColor, selectedSize: selectedSize || product.sizes[0], quantity: selectedQuantity });
+    addToBasket({
+      ...product,
+      selectedColor,
+      selectedSize: selectedSize || product.sizes[0],
+      quantity: selectedQuantity,
+    });
   };
 
   return (
@@ -214,7 +219,7 @@ const ViewProduct = () => {
             </div>
             {errorFeatured && !isLoadingFeatured ? (
               <MessageDisplay
-                message={error}
+                message={errorFeatured}
                 action={fetchRecommendedProducts}
                 buttonLabel="Try Again"
               />

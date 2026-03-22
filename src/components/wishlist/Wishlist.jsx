@@ -25,7 +25,7 @@ const Wishlist = () => {
 
   return (
     <Boundary>
-      <div className="basket wishlist">
+      <div className="wishlist">
         <div className="basket-list">
           <div className="basket-header">
             <h3 className="basket-header-title">

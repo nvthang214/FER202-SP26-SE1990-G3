@@ -14,6 +14,7 @@ import { useWishlist } from '@/hooks';
 import FiltersToggle from './FiltersToggle';
 import MobileNavigation from './MobileNavigation';
 import SearchBar from './SearchBar';
+import { useBasket } from '@/hooks';
 
 const Navigation = () => {
   const navbar = useRef(null);
@@ -25,6 +26,8 @@ const Navigation = () => {
     isAuthenticating: state.app.isAuthenticating,
     isLoading: state.app.loading
   }));
+
+  const { basket } = useBasket();
   const { wishlist } = useWishlist();
 
   const scrollHandler = () => {
