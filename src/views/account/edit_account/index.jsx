@@ -61,15 +61,23 @@ const EditProfile = () => {
   } = useFileHandler({ avatar: {}, banner: {} });
 
   const update = (form, credentials = {}) => {
+    const updates = {
+      fullname: form.fullname,
+      email: form.email,
+      address: form.address,
+      mobile: form.mobile
+    };
+
+    if (imageFile.banner.file) {
+      updates.banner = profile.banner;
+    }
+
+    if (imageFile.avatar.file) {
+      updates.avatar = profile.avatar;
+    }
+
     dispatch(updateProfile({
-      updates: {
-        fullname: form.fullname,
-        email: form.email,
-        address: form.address,
-        mobile: form.mobile,
-        avatar: profile.avatar,
-        banner: profile.banner
-      },
+      updates,
       files: {
         bannerFile: imageFile.banner.file,
         avatarFile: imageFile.avatar.file
