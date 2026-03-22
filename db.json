@@ -23,7 +23,7 @@
       "provider": "password",
       "basket": [
         {
-          "id": "product-001",
+          "id": "product-001--38",
           "name": "Salt Maalat Hoodie",
           "brand": "Salt Maalat",
           "price": 390000,
@@ -61,7 +61,8 @@
           ],
           "reviews": [],
           "selectedColor": "",
-          "selectedSize": 38
+          "selectedSize": 38,
+          "originalId": "product-001"
         }
       ],
       "role": "USER",

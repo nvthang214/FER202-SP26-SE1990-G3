@@ -177,9 +177,7 @@ const ViewProduct = () => {
                     </button>
                   </div>
                 </div>
-                <div>
-                  <br />
-                  <br />
+                <div className="product-modal-action">
                   <button
                     className={`button button-small ${isItemOnBasket(product.id) ? "button-border button-border-gray" : ""}`}
                     onClick={handleAddToBasket}
