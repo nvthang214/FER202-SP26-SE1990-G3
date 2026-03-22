@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
 import { ColorChooser, ImageLoader, MessageDisplay } from '@/components/common';
 import { ProductShowcaseGrid } from '@/components/product';
+import { ProductReviews } from '@/components/product';
 import { RECOMMENDED_PRODUCTS, SHOP } from '@/constants/routes';
 import { displayMoney } from '@/helpers/utils';
 import {
@@ -171,6 +172,7 @@ const ViewProduct = () => {
               <ProductShowcaseGrid products={recommendedProducts} skeletonCount={6} />
             )}
           </div>
+          <ProductReviews productId={id} />
         </div>
       )}
     </main>

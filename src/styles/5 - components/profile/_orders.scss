@@ -99,6 +99,11 @@
   color: #0a7a35;
 }
 
+.user-order-status--received {
+  background: #d7f7e3;
+  color: #0a7a35;
+}
+
 .user-order-status--cancelled {
   background: #ffe3e3;
   color: #bb1f1f;
@@ -161,5 +166,51 @@
     gap: $s-size;
     padding: 0.8rem 0;
     border-bottom: 1px solid $border-color;
+  }
+}
+
+// Inline review form inside order history
+.order-review-form {
+  margin-top: 0.75rem;
+  padding: $s-size;
+  background: $background-color-01;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+
+  .review-form-row {
+    margin-bottom: 0.75rem;
+  }
+
+  .review-form-label {
+    display: block;
+    font-size: $font-small;
+    color: $gray-01;
+    margin-bottom: 0.3rem;
+  }
+
+  .review-form-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: $font-small;
+    resize: vertical;
+    font-family: inherit;
+    background: #fff;
+    color: $paragraph-color;
+  }
+
+  .review-form-count {
+    display: block;
+    text-align: right;
+    font-size: 0.75rem;
+    color: $gray-01;
+    margin-top: 0.2rem;
+  }
+
+  .review-form-error {
+    color: #bb1f1f;
+    font-size: $font-small;
+    margin: 0.3rem 0;
   }
 }

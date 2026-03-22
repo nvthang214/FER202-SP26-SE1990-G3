@@ -543,6 +543,47 @@ class JsonServerService {
 
   deleteImage = async () => null;
 
+  getProductReviews = async (productId) => {
+  const product = await this.request(`/products/${productId}`);
+  return Array.isArray(product?.reviews) ? product.reviews : [];
+};
+
+addReview = async (productId, review) => {
+  const product = await this.request(`/products/${productId}`);
+  const currentReviews = Array.isArray(product?.reviews) ? product.reviews : [];
+  const nextReviews = [review, ...currentReviews];
+  await this.request(`/products/${productId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ reviews: nextReviews }),
+  });
+  return nextReviews;
+};
+
+deleteReview = async (productId, reviewId) => {
+  const product = await this.request(`/products/${productId}`);
+  const currentReviews = Array.isArray(product?.reviews) ? product.reviews : [];
+  const nextReviews = currentReviews.filter((r) => r.id !== reviewId);
+  await this.request(`/products/${productId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ reviews: nextReviews }),
+  });
+  return nextReviews;
+};
+
+  confirmOrderReceived = async (userId, orderId) => {
+    const snapshot = await this.getUser(userId);
+    const user = snapshot.data() || {};
+    const currentOrders = Array.isArray(user.orders) ? user.orders : [];
+    const nextOrders = currentOrders.map((order) =>
+      order.id === orderId ? { ...order, status: "RECEIVED" } : order
+    );
+    await this.request(`/users/${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ orders: nextOrders }),
+    });
+    return nextOrders;
+  };
+
   editProduct = (id, updates) =>
     this.request(`/products/${id}`, {
       method: "PATCH",
@@ -557,7 +598,9 @@ class JsonServerService {
         deletedAt: new Date().toISOString(),
       }),
     });
+
 }
+  
 
 const firebaseInstance = new JsonServerService();
 
