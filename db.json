@@ -21,7 +21,50 @@
       "email": "user1@salinaka.local",
       "password": "User123123",
       "provider": "password",
-      "basket": [],
+      "basket": [
+        {
+          "id": "product-001--38",
+          "name": "Salt Maalat Hoodie",
+          "brand": "Salt Maalat",
+          "price": 390000,
+          "maxQuantity": 12,
+          "description": "Heavyweight hoodie with clean embroidery details and comfortable cotton blend.",
+          "keywords": [
+            "hoodie",
+            "streetwear",
+            "salt"
+          ],
+          "sizes": [
+            38,
+            40,
+            42
+          ],
+          "isFeatured": true,
+          "isRecommended": true,
+          "availableColors": [
+            "#000000",
+            "#f5f5f5"
+          ],
+          "quantity": 1,
+          "name_lower": "salt maalat hoodie",
+          "dateAdded": 1708900000000,
+          "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80",
+          "imageCollection": [
+            {
+              "id": "product-001-a",
+              "url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+              "id": "product-001-b",
+              "url": "https://images.unsplash.com/photo-1618354691321-e851c56960d1?auto=format&fit=crop&w=800&q=80"
+            }
+          ],
+          "reviews": [],
+          "selectedColor": "",
+          "selectedSize": 38,
+          "originalId": "product-001"
+        }
+      ],
       "role": "USER",
       "dateJoined": "2026-02-25T21:20:33.103Z",
       "fullname": "Nguyen Truong Giang",
