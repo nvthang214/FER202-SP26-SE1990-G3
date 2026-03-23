@@ -15,6 +15,23 @@
   }
 }
 
+.wishlist {
+  width: 60rem;
+  height: 100vh;
+  background: $white;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transform: translateX(100%);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+  @include bezier-transition(transform);
+  z-index: map-get($z-index, "basket");
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
 .basket-toggle {
   &:hover {
     cursor: pointer;

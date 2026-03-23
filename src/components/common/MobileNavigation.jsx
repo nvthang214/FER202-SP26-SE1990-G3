@@ -1,4 +1,6 @@
 import { BasketToggle } from '@/components/basket';
+import { WishlistToggle } from '@/components/wishlist';
+import { useWishlist } from '@/hooks';
 import { HOME, SIGNIN } from '@/constants/routes';
 import PropType from 'prop-types';
 import React from 'react';
@@ -13,6 +15,7 @@ const Navigation = (props) => {
     isAuthenticating, basketLength, disabledPaths, user
   } = props;
   const { pathname } = useLocation();
+  const { wishlist } = useWishlist();
 
   const onClickLink = (e) => {
     if (isAuthenticating) e.preventDefault();
@@ -42,6 +45,20 @@ const Navigation = (props) => {
             </button>
           )}
         </BasketToggle>
+        <WishlistToggle>
+          {({ onClickToggle }) => (
+            <button
+              className="button-link navigation-menu-link wishlist-toggle"
+              onClick={onClickToggle}
+              type="button"
+            >
+
+              <Badge count={wishlist.length}>
+                <i className="fa fa-heart" style={{ fontSize: '2rem' }} />
+              </Badge>
+            </button>
+          )}
+        </WishlistToggle>
         <ul className="mobile-navigation-menu">
           {user ? (
             <li className="mobile-navigation-item">
