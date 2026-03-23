@@ -20,13 +20,14 @@ const useFileHandler = (initState) => {
     const img = event.target.files[0];
     const size = img.size / 1024 / 1024;
     const regex = /(\.jpg|\.jpeg|\.png)$/i;
+    const sizeLimitMB = 0.095; // ~97KB, JSON Server limit is 100KB payload max
 
     setFileLoading(true);
     if (!regex.exec(val)) {
       alert('File type must be JPEG or PNG', 'error');
       setFileLoading(false);
-    } else if (size > 0.5) {
-      alert('File size exceeded 500kb, consider optimizing your image', 'error');
+    } else if (size > sizeLimitMB) {
+      alert('File size exceeded 100kb, choose a smaller image.', 'error');
       setFileLoading(false);
     } else if (type === 'multiple') {
       Array.from(event.target.files).forEach((file) => {

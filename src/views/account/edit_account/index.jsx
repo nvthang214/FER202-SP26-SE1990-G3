@@ -69,11 +69,11 @@ const EditProfile = () => {
     };
 
     if (imageFile.banner.file) {
-      updates.banner = profile.banner;
+      updates.banner = imageFile.banner.url || profile.banner;
     }
 
     if (imageFile.avatar.file) {
-      updates.avatar = profile.avatar;
+      updates.avatar = imageFile.avatar.url || profile.avatar;
     }
 
     dispatch(updateProfile({

@@ -533,12 +533,47 @@ class JsonServerService {
   };
 
   storeImage = async (id, folder, imageFile) => {
+    if (!imageFile) return '';
+    if (typeof imageFile === 'string') return imageFile;
+
     const _folder = folder;
     const _id = id;
     void _folder;
     void _id;
 
-    return this.fileToDataUrl(imageFile);
+    const dataUrl = await this.fileToDataUrl(imageFile);
+
+    const image = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = dataUrl;
+    });
+
+    const maxDimension = 800;
+    let { width, height } = image;
+
+    if (width > maxDimension || height > maxDimension) {
+      const ratio = Math.min(maxDimension / width, maxDimension / height);
+      width = Math.round(width * ratio);
+      height = Math.round(height * ratio);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, width, height);
+
+    let output = canvas.toDataURL('image/jpeg', 0.8);
+    let quality = 0.8;
+
+    while (output.length > 100000 && quality > 0.3) {
+      quality -= 0.1;
+      output = canvas.toDataURL('image/jpeg', quality);
+    }
+
+    return output;
   };
 
   deleteImage = async () => null;
