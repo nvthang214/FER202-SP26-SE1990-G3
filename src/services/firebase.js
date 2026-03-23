@@ -646,6 +646,27 @@ deleteReview = async (productId, reviewId) => {
     return nextOrders;
   };
 
+  returnOrder = async (userId, orderId, reason = "") => {
+    const snapshot = await this.getUser(userId);
+    const user = snapshot.data() || {};
+    const currentOrders = Array.isArray(user.orders) ? user.orders : [];
+    const nextOrders = currentOrders.map((order) =>
+      order.id === orderId
+        ? {
+            ...order,
+            status: "RETURNED",
+            updatedAt: new Date().toISOString(),
+            returnReason: reason,
+          }
+        : order,
+    );
+    await this.request(`/users/${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ orders: nextOrders }),
+    });
+    return nextOrders;
+  };
+
   editProduct = (id, updates) =>
     this.request(`/products/${id}`, {
       method: "PATCH",

@@ -19,7 +19,24 @@ const getOrderTotal = (order) => {
   return itemsTotal + Number(order.shippingFee || 0);
 };
 
-const STATUS_LABEL = { PLACED: "Placed", RECEIVED: "Received" };
+const STATUS_LABEL = {
+  PLACED: "Placed",
+  PROCESSING: "Processing",
+  DELIVERED: "Delivered",
+  RECEIVED: "Received",
+  RETURNED: "Returned",
+  CANCELLED: "Cancelled",
+};
+
+const RETURN_REASONS = [
+  "Item is damaged",
+  "Wrong product received",
+  "Did not match description",
+  "Found cheaper elsewhere",
+  "Changed mind",
+  "Other",
+];
+
 const MAX_RATING = 5;
 
 /* ── Inline star picker ─────────────────────────────── */
@@ -141,6 +158,10 @@ const UserOrdersTab = () => {
   const profile = useSelector((state) => state.profile);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [confirmingId, setConfirmingId] = useState(null);
+  const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [returnOrderId, setReturnOrderId] = useState(null);
+  const [returnReason, setReturnReason] = useState(RETURN_REASONS[0]);
+  const [returnOtherReason, setReturnOtherReason] = useState("");
   // productId => review object (if the user reviewed it) or null/false
   const [reviewedProducts, setReviewedProducts] = useState({});
   // productId currently showing the inline form or view
@@ -203,6 +224,45 @@ const UserOrdersTab = () => {
       setConfirmingId(null);
     }
   };
+
+  const openReturnReasonDialog = (orderId) => {
+    if (!auth?.id) return;
+    setReturnOrderId(orderId);
+    setReturnReason(RETURN_REASONS[0]);
+    setReturnOtherReason("");
+    setIsReturnModalOpen(true);
+  };
+
+  const handleConfirmReturnOrder = async () => {
+    if (!auth?.id || !returnOrderId) return;
+
+    let reason = returnReason;
+    if (returnReason === "Other") {
+      reason = returnOtherReason.trim() || "Other";
+    }
+
+    if (!reason) {
+      displayActionMessage("Please select or type a reason for return.", "error");
+      return;
+    }
+
+    try {
+      setConfirmingId(returnOrderId);
+      const nextOrders = await firebase.returnOrder(auth.id, returnOrderId, reason);
+      dispatch(setProfile({ ...profile, orders: nextOrders }));
+      if (selectedOrder?.id === returnOrderId) {
+        setSelectedOrder((prev) => ({ ...prev, status: "RETURNED", returnReason: reason }));
+      }
+      setIsReturnModalOpen(false);
+      displayActionMessage("Order has been returned.", "success");
+    } catch {
+      displayActionMessage("Failed to return order.", "error");
+    } finally {
+      setConfirmingId(null);
+      setReturnOrderId(null);
+    }
+  };
+
 
   // Called when a review form finishes (submit or cancel)
   const handleReviewDone = (reviewedProductId) => {
@@ -348,8 +408,20 @@ const UserOrdersTab = () => {
               })}
             </ul>
 
-            {/* Confirm receipt button */}
-            {order.status !== "RECEIVED" && (
+            {/* Confirm/return buttons */}
+            {order.status !== "CANCELLED" && order.status !== "RETURNED" && (
+              <button
+                className="button button-border button-border-gray"
+                type="button"
+                disabled={confirmingId === order.id}
+                onClick={() => openReturnReasonDialog(order.id)}
+                style={{ marginTop: "0.75rem", marginRight: "0.5rem" }}
+              >
+                {confirmingId === order.id ? "Processing..." : "↩ Return Order"}
+              </button>
+            )}
+
+            {order.status !== "RECEIVED" && order.status !== "RETURNED" && order.status !== "CANCELLED" && (
               <button
                 className="button button-muted"
                 type="button"
@@ -360,9 +432,82 @@ const UserOrdersTab = () => {
                 {confirmingId === order.id ? "Confirming..." : "✓ Confirm Receipt"}
               </button>
             )}
+
+            {order.status === "RETURNED" && (
+              <button
+                className="button button-small button-border button-border-gray"
+                type="button"
+                disabled
+                style={{ marginTop: "0.75rem", cursor: "not-allowed" }}
+              >
+                Returned
+              </button>
+            )}
+
+            {order.status === "CANCELLED" && (
+              <button
+                className="button button-small button-border button-border-gray"
+                type="button"
+                disabled
+                style={{ marginTop: "0.75rem", cursor: "not-allowed" }}
+              >
+                Cancelled
+              </button>
+            )}
           </article>
         ))}
       </div>
+
+      {/* Return reason modal */}
+      <Modal
+        isOpen={isReturnModalOpen}
+        onRequestClose={() => setIsReturnModalOpen(false)}
+        overrideStyle={{ width: 420, maxWidth: "92vw" }}
+      >
+        <div style={{ padding: "1rem" }}>
+          <h3>Return Order</h3>
+          <p>Select the reason for returning this order:</p>
+          <select
+            className="filters-brand"
+            value={returnReason}
+            onChange={(e) => setReturnReason(e.target.value)}
+            style={{ width: "100%", marginBottom: "0.75rem" }}
+          >
+            {RETURN_REASONS.map((reason) => (
+              <option key={reason} value={reason}>
+                {reason}
+              </option>
+            ))}
+          </select>
+          {returnReason === "Other" && (
+            <textarea
+              className="review-form-textarea"
+              rows={3}
+              placeholder="Please describe your return reason"
+              value={returnOtherReason}
+              onChange={(e) => setReturnOtherReason(e.target.value)}
+              style={{ width: "100%", marginBottom: "0.75rem" }}
+            />
+          )}
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
+            <button
+              className="button button-border button-border-gray"
+              type="button"
+              onClick={() => setIsReturnModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="button"
+              type="button"
+              disabled={!returnOrderId || confirmingId === returnOrderId}
+              onClick={handleConfirmReturnOrder}
+            >
+              {confirmingId === returnOrderId ? "Processing..." : "Return order"}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Order detail modal */}
       <Modal
@@ -391,6 +536,11 @@ const UserOrdersTab = () => {
                 {STATUS_LABEL[selectedOrder.status] || selectedOrder.status || "PLACED"}
               </span>
             </p>
+            {selectedOrder.status === "RETURNED" && selectedOrder.returnReason && (
+              <p>
+                <strong>Return reason:</strong> {selectedOrder.returnReason}
+              </p>
+            )}
             <p><strong>Payment:</strong> {selectedOrder.paymentType || "-"}</p>
 
             <div className="user-order-modal-summary">
@@ -425,7 +575,21 @@ const UserOrdersTab = () => {
               )}
             </ul>
 
-            {selectedOrder.status !== "RECEIVED" && (
+            {selectedOrder.status !== "CANCELLED" && selectedOrder.status !== "RETURNED" && (
+              <button
+                className="button button-border button-border-gray"
+                type="button"
+                disabled={confirmingId === selectedOrder.id}
+                onClick={() => openReturnReasonDialog(selectedOrder.id)}
+                style={{ marginTop: "1rem", width: "100%" }}
+              >
+                {confirmingId === selectedOrder.id ? "Processing..." : "↩ Return Order"}
+              </button>
+            )}
+
+            {selectedOrder.status !== "RECEIVED" &&
+             selectedOrder.status !== "RETURNED" &&
+             selectedOrder.status !== "CANCELLED" && (
               <button
                 className="button"
                 type="button"
@@ -435,6 +599,18 @@ const UserOrdersTab = () => {
               >
                 {confirmingId === selectedOrder.id ? "Confirming..." : "✓ Confirm Receipt"}
               </button>
+            )}
+
+            {selectedOrder.status === "RETURNED" && (
+              <p style={{ marginTop: "1rem", color: "#d35400", fontWeight: 600 }}>
+                ↩ This order has been returned.
+              </p>
+            )}
+
+            {selectedOrder.status === "CANCELLED" && (
+              <p style={{ marginTop: "1rem", color: "#9b59b6", fontWeight: 600 }}>
+                ✖ This order is cancelled.
+              </p>
             )}
 
             {selectedOrder.status === "RECEIVED" && (
