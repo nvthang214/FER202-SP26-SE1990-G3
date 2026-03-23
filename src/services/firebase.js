@@ -96,6 +96,54 @@ class JsonServerService {
       reader.readAsDataURL(file);
     });
 
+  compressImage = async (file, maxBytes = 100 * 1024) => {
+    if (!file) return "";
+
+    const dataUrl = await this.fileToDataUrl(file);
+    if (!dataUrl) return "";
+
+    const getByteSize = (str) => Math.round((str.length * 3) / 4);
+    if (getByteSize(dataUrl.split(",")[1] || "") <= maxBytes) {
+      return dataUrl;
+    }
+
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => {
+        const maxDimension = 800;
+        const ratio = Math.min(1, maxDimension / image.width, maxDimension / image.height);
+        const width = Math.round(image.width * ratio);
+        const height = Math.round(image.height * ratio);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, width, height);
+
+        let quality = 0.9;
+
+        const tryCompress = () => {
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          const size = getByteSize(compressedDataUrl.split(',')[1] || '');
+
+          if (size <= maxBytes || quality <= 0.3) {
+            resolve(compressedDataUrl);
+          } else {
+            quality -= 0.1;
+            tryCompress();
+          }
+        };
+
+        tryCompress();
+      };
+
+      image.onerror = () => reject(new Error('Failed to load image for compression.'));
+      image.src = dataUrl;
+    });
+  };
+
   // AUTH ACTIONS ------------
 
   createAccount = async (email, password) => {
@@ -538,7 +586,21 @@ class JsonServerService {
     void _folder;
     void _id;
 
-    return this.fileToDataUrl(imageFile);
+    if (!imageFile) {
+      return '';
+    }
+
+    if (typeof imageFile === 'string') {
+      return imageFile;
+    }
+
+    // Compress and limit payload below 100KB; fallback to raw data URL
+    try {
+      return await this.compressImage(imageFile, 95 * 1024);
+    } catch (err) {
+      console.warn('Image compression failed, using raw data URL', err);
+      return this.fileToDataUrl(imageFile);
+    }
   };
 
   deleteImage = async () => null;
