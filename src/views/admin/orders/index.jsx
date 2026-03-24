@@ -6,6 +6,17 @@ import React, { useEffect, useMemo, useState } from "react";
 
 const formatCurrency = (value) =>
   `${Math.round(value || 0).toLocaleString("vi-VN")} đ`;
+const THUMB_PLACEHOLDER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Crect width='72' height='72' rx='10' fill='%23f3f4f6'/%3E%3Cpath d='M18 46l11-12 8 8 7-7 10 11H18z' fill='%239ca3af'/%3E%3Ccircle cx='27' cy='26' r='5' fill='%23cbd5e1'/%3E%3C/svg%3E";
+const STATUS_OPTIONS = [
+  "ALL",
+  "PLACED",
+  "PROCESSING",
+  "DELIVERED",
+  "CANCELLED",
+];
+const TIME_OPTIONS = ["TODAY", "7D", "30D", "ALL"];
+const SORT_OPTIONS = ["NEWEST", "OLDEST", "HIGHEST"];
 
 const normalizeStatus = (status = "") => String(status).toUpperCase();
 const isFinalStatus = (status = "") =>
@@ -27,6 +38,46 @@ const orderTotal = (order) => {
   return itemsTotal + Number(order.shippingFee || 0);
 };
 
+const orderItems = (order) => (Array.isArray(order.items) ? order.items : []);
+
+const orderItemCount = (order) =>
+  orderItems(order).reduce((sum, item) => sum + Number(item.quantity || 1), 0);
+
+const getTimeFilterStartMs = (timeFilter) => {
+  const now = new Date();
+
+  if (timeFilter === "TODAY") {
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  }
+
+  if (timeFilter === "7D" || timeFilter === "30D") {
+    const days = Number(timeFilter.replace("D", ""));
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - (days - 1));
+    return start.getTime();
+  }
+
+  return null;
+};
+
+const getOrderTime = (order) =>
+  new Date(order.createdAt || order.updatedAt || 0).getTime();
+
+const isOptionValid = (value, options) =>
+  options.includes(String(value || "").toUpperCase());
+
+const isDefaultFilterState = ({
+  searchText,
+  sortBy,
+  statusFilter,
+  timeFilter,
+}) =>
+  searchText.trim() === "" &&
+  sortBy === "NEWEST" &&
+  statusFilter === "ALL" &&
+  timeFilter === "30D";
+
 const AdminOrders = () => {
   useDocumentTitle("Orders | Salinaka Admin");
   useScrollTop();
@@ -34,6 +85,8 @@ const AdminOrders = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [timeFilter, setTimeFilter] = useState("30D");
+  const [sortBy, setSortBy] = useState("NEWEST");
   const [searchText, setSearchText] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -54,12 +107,61 @@ const AdminOrders = () => {
     fetchUsers();
   }, []);
 
-  const orders = useMemo(() => {
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const nextStatus = params.get("status");
+    const nextTime = params.get("time");
+    const nextSort = params.get("sort");
+    const nextSearch = params.get("q");
+
+    if (isOptionValid(nextStatus, STATUS_OPTIONS)) {
+      setStatusFilter(String(nextStatus).toUpperCase());
+    }
+
+    if (isOptionValid(nextTime, TIME_OPTIONS)) {
+      setTimeFilter(String(nextTime).toUpperCase());
+    }
+
+    if (isOptionValid(nextSort, SORT_OPTIONS)) {
+      setSortBy(String(nextSort).toUpperCase());
+    }
+
+    if (typeof nextSearch === "string") {
+      setSearchText(nextSearch);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("status", statusFilter);
+    params.set("time", timeFilter);
+    params.set("sort", sortBy);
+
+    if (searchText.trim()) {
+      params.set("q", searchText.trim());
+    } else {
+      params.delete("q");
+    }
+
+    const nextUrl = `${window.location.pathname}?${params.toString()}${window.location.hash || ""}`;
+    window.history.replaceState({}, "", nextUrl);
+  }, [searchText, sortBy, statusFilter, timeFilter]);
+
+  const { orders, statusCounts } = useMemo(() => {
     const normalized = users.flatMap((user) => {
       const userOrders = Array.isArray(user.orders) ? user.orders : [];
       return userOrders.map((order) => ({
         ...order,
         userId: order.userId || user.id,
+        orderDateMs: getOrderTime(order),
         customer: {
           id: order.customer?.id || user.id,
           name: order.customer?.name || user.fullname || "Unnamed User",
@@ -75,10 +177,9 @@ const AdminOrders = () => {
     );
 
     const keyword = searchText.trim().toLowerCase();
+    const startTimeMs = getTimeFilterStartMs(timeFilter);
 
-    return normalized.filter((order) => {
-      const status = String(order.status || "PLACED").toUpperCase();
-      const statusMatch = statusFilter === "ALL" || statusFilter === status;
+    const baseFiltered = normalized.filter((order) => {
       const keywordMatch =
         keyword === "" ||
         String(order.id || "")
@@ -91,9 +192,54 @@ const AdminOrders = () => {
           .toLowerCase()
           .includes(keyword);
 
-      return statusMatch && keywordMatch;
+      const timeMatch =
+        startTimeMs === null ||
+        (typeof order.orderDateMs === "number" &&
+          !Number.isNaN(order.orderDateMs) &&
+          order.orderDateMs >= startTimeMs);
+
+      return keywordMatch && timeMatch;
     });
-  }, [users, searchText, statusFilter]);
+
+    const counts = baseFiltered.reduce(
+      (acc, order) => {
+        const status = String(order.status || "PLACED").toUpperCase();
+        acc.ALL += 1;
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      },
+      {
+        ALL: 0,
+        PLACED: 0,
+        PROCESSING: 0,
+        DELIVERED: 0,
+        CANCELLED: 0,
+      },
+    );
+
+    const filteredOrders = baseFiltered.filter((order) => {
+      const status = String(order.status || "PLACED").toUpperCase();
+      const statusMatch = statusFilter === "ALL" || statusFilter === status;
+      return statusMatch;
+    });
+
+    filteredOrders.sort((a, b) => {
+      if (sortBy === "OLDEST") {
+        return a.orderDateMs - b.orderDateMs;
+      }
+
+      if (sortBy === "HIGHEST") {
+        return orderTotal(b) - orderTotal(a);
+      }
+
+      return b.orderDateMs - a.orderDateMs;
+    });
+
+    return {
+      orders: filteredOrders,
+      statusCounts: counts,
+    };
+  }, [users, searchText, sortBy, statusFilter, timeFilter]);
 
   const updateOrderStatus = async (orderId, userId, status) => {
     try {
@@ -174,11 +320,42 @@ const AdminOrders = () => {
     setSelectedOrder(null);
   };
 
+  const resetFilters = () => {
+    setSearchText("");
+    setSortBy("NEWEST");
+    setStatusFilter("ALL");
+    setTimeFilter("30D");
+  };
+
+  const canResetFilters = !isDefaultFilterState({
+    searchText,
+    sortBy,
+    statusFilter,
+    timeFilter,
+  });
+
   return (
     <Boundary>
       <div className="product-admin-header">
         <h3 className="product-admin-header-title">Orders ({orders.length})</h3>
-        <div className="admin-orders-controls">
+        <div className="admin-orders-controls admin-orders-controls--top">
+          <div className="admin-orders-time-tabs">
+            {[
+              { key: "TODAY", label: "Today" },
+              { key: "7D", label: "Last 7d" },
+              { key: "30D", label: "Last 30d" },
+              { key: "ALL", label: "All time" },
+            ].map((item) => (
+              <button
+                className={`admin-orders-tab ${timeFilter === item.key ? "admin-orders-tab--active" : ""}`}
+                key={item.key}
+                onClick={() => setTimeFilter(item.key)}
+                type="button"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
           <input
             className="search-input"
             onChange={(e) => setSearchText(e.target.value)}
@@ -186,18 +363,53 @@ const AdminOrders = () => {
             type="text"
             value={searchText}
           />
-          <select
-            className="filters-brand"
-            onChange={(e) => setStatusFilter(e.target.value)}
-            value={statusFilter}
+          <button
+            className="button button-small button-border"
+            disabled={!canResetFilters}
+            onClick={resetFilters}
+            type="button"
           >
-            <option value="ALL">All status</option>
-            <option value="PLACED">Placed</option>
-            <option value="PROCESSING">Processing</option>
-            <option value="DELIVERED">Delivered</option>
-            <option value="CANCELLED">Cancelled</option>
-            <option value="RETURNED">Returned</option>
-          </select>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div className="admin-orders-status-row">
+        <div className="admin-orders-controls admin-orders-controls--status">
+          {STATUS_OPTIONS.map((status) => (
+            <button
+              className={`admin-orders-tab ${statusFilter === status ? "admin-orders-tab--active" : ""}`}
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              type="button"
+            >
+              {status === "ALL"
+                ? "All"
+                : `${status.charAt(0)}${status.slice(1).toLowerCase()}`}{" "}
+              ({statusCounts[status] || 0})
+            </button>
+          ))}
+        </div>
+
+        <div
+          className="admin-orders-sort-group"
+          role="group"
+          aria-label="Sort orders"
+        >
+          {[
+            { key: "NEWEST", label: "New" },
+            { key: "OLDEST", label: "Old" },
+            { key: "HIGHEST", label: "Value" },
+          ].map((option) => (
+            <button
+              className={`admin-orders-sort-btn ${sortBy === option.key ? "admin-orders-sort-btn--active" : ""}`}
+              key={option.key}
+              onClick={() => setSortBy(option.key)}
+              type="button"
+            >
+              {option.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -215,44 +427,55 @@ const AdminOrders = () => {
             {orders.map((order) => {
               const currentStatus = normalizeStatus(order.status || "PLACED");
               const isLocked = isFinalStatus(currentStatus);
+              const items = orderItems(order);
+              const firstItem = items[0] || {};
 
               return (
                 <article className="admin-orders-item" key={order.id}>
-                  <div className="admin-orders-meta">
-                    <p>
-                      <strong>Order:</strong>{" "}
-                      <button
-                        className="button-link admin-order-link"
-                        onClick={() => openOrderModal(order)}
-                        type="button"
-                      >
-                        {order.id}
-                      </button>
-                    </p>
-                    <p>
-                      <strong>Customer:</strong> {order.customer?.name} (
-                      {order.customer?.email})
-                    </p>
-                    <p>
-                      <strong>Date:</strong>{" "}
-                      {order.createdAt ? displayDate(order.createdAt) : "-"}
-                    </p>
-                  </div>
+                  <div className="admin-orders-main">
+                    <img
+                      alt={firstItem.name || "Order item"}
+                      className="admin-orders-thumb"
+                      src={firstItem.image || THUMB_PLACEHOLDER}
+                    />
 
-                  <div className="admin-orders-summary">
-                    <span>
-                      {Array.isArray(order.items) ? order.items.length : 0}{" "}
-                      products
-                    </span>
-                    <strong>{formatCurrency(orderTotal(order))}</strong>
+                    <div className="admin-orders-meta">
+                      <div className="admin-orders-title-row">
+                        <button
+                          className="button-link admin-order-link"
+                          onClick={() => openOrderModal(order)}
+                          type="button"
+                        >
+                          {order.id}
+                        </button>
+                        <span
+                          className={`admin-order-status admin-order-status--${String(order.status || "PLACED").toLowerCase()}`}
+                        >
+                          {order.status || "PLACED"}
+                        </span>
+                      </div>
+
+                      <p>
+                        <strong>{order.customer?.name}</strong> •{" "}
+                        {order.customer?.email}
+                      </p>
+                      <p>
+                        {order.createdAt ? displayDate(order.createdAt) : "-"} •{" "}
+                        {order.paymentType || "-"}
+                      </p>
+                      <p>
+                        {firstItem.name || "Order item"}
+                        {items.length > 1 ? ` +${items.length - 1} more` : ""}
+                      </p>
+                    </div>
+
+                    <div className="admin-orders-summary">
+                      <span>{orderItemCount(order)} items</span>
+                      <strong>{formatCurrency(orderTotal(order))}</strong>
+                    </div>
                   </div>
 
                   <div className="admin-orders-actions">
-                    <span
-                      className={`admin-order-status admin-order-status--${String(order.status || "PLACED").toLowerCase()}`}
-                    >
-                      {order.status || "PLACED"}
-                    </span>
                     <button
                       className="button button-small button-border"
                       disabled={isLocked || currentStatus === "PROCESSING"}
@@ -371,9 +594,19 @@ const AdminOrders = () => {
                 : []
               ).map((item) => (
                 <li key={`${selectedOrder.id}-${item.id}`}>
-                  <span>{item.name}</span>
+                  <img
+                    alt={item.name || "Order item"}
+                    className="admin-order-modal-item-thumb"
+                    src={item.image || THUMB_PLACEHOLDER}
+                  />
+                  <div className="admin-order-modal-item-content">
+                    <span>{item.name}</span>
+                    <small>
+                      Qty: {Number(item.quantity || 1)} • Unit:{" "}
+                      {formatCurrency(Number(item.price || 0))}
+                    </small>
+                  </div>
                   <span>
-                    x{item.quantity} -{" "}
                     {formatCurrency(
                       Number(item.price || 0) * Number(item.quantity || 1),
                     )}

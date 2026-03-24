@@ -24,6 +24,136 @@
   }
 }
 
+.admin-orders-controls--top {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  .search-input {
+    min-width: 260px;
+    min-height: 36px;
+  }
+
+  .filters-brand {
+    min-width: 145px;
+    min-height: 36px;
+    border-radius: 999px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 1.1rem;
+    background: $white;
+  }
+
+  .button {
+    min-height: 36px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  @include mobile {
+    justify-content: flex-start;
+
+    .search-input,
+    .filters-brand {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+}
+
+.admin-orders-status-row {
+  margin-top: $s-size;
+  margin-bottom: $m-size;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $s-size;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.admin-orders-controls--status {
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.admin-orders-time-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-orders-tab {
+  border: 1px solid $border-color;
+  background: $white;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: $font-small;
+  color: $gray-01;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: darken($border-color, 8%);
+    color: $black;
+  }
+}
+
+.admin-orders-tab--active {
+  border-color: $yellow;
+  background: rgba($yellow, 0.14);
+  color: darken($yellow, 25%);
+  font-weight: 700;
+}
+
+.admin-orders-sort-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid $border-color;
+  border-radius: 999px;
+  overflow: hidden;
+  background: $white;
+  flex-shrink: 0;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.admin-orders-sort-btn {
+  border: 0;
+  background: transparent;
+  color: $gray-01;
+  padding: 0.4rem 0.75rem;
+  font-size: 1.05rem;
+  min-height: 34px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:not(:last-child) {
+    border-right: 1px solid $border-color;
+  }
+
+  &:hover {
+    color: $black;
+    background: rgba($black, 0.03);
+  }
+
+  @include mobile {
+    flex: 1;
+  }
+}
+
+.admin-orders-sort-btn--active {
+  background: rgba($yellow, 0.15);
+  color: darken($yellow, 25%);
+  font-weight: 700;
+}
+
 .admin-orders-list {
   display: grid;
   gap: $m-size;
@@ -36,25 +166,71 @@
   padding: $m-size;
 }
 
-.admin-orders-meta {
-  p {
-    margin: 0 0 0.6rem;
-    word-break: break-word;
+.admin-orders-main {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: center;
+  gap: $m-size;
+
+  @include mobile {
+    grid-template-columns: 56px 1fr;
   }
 }
 
-.admin-orders-summary {
+.admin-orders-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid $border-color;
+
+  @include mobile {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.admin-orders-meta {
+  p {
+    margin: 0 0 0.45rem;
+    word-break: break-word;
+    color: $gray-01;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      color: $black;
+    }
+  }
+}
+
+.admin-orders-title-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 0;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+
+.admin-orders-summary {
+  display: grid;
+  text-align: right;
 
   span {
     color: $gray-01;
+    font-size: $font-small;
+    margin-bottom: 0.2rem;
   }
 
   strong {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
+  }
+
+  @include mobile {
+    grid-column: 1 / -1;
+    text-align: left;
+    margin-top: 0.25rem;
   }
 }
 
@@ -63,6 +239,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.6rem;
+  margin-top: $m-size;
+  padding-top: $s-size;
+  border-top: 1px solid $border-color;
 }
 
 .admin-orders-locked-note {
@@ -70,7 +249,8 @@
 }
 
 .admin-order-link {
-  font-size: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
   text-decoration: underline;
   color: $off-black;
 }
@@ -78,8 +258,8 @@
 .admin-order-status {
   display: inline-block;
   border-radius: 999px;
-  padding: 0.3rem 0.8rem;
-  font-size: $font-small;
+  padding: 0.25rem 0.65rem;
+  font-size: 1.1rem;
   font-weight: bold;
   background: $background-color-01;
 }
@@ -153,9 +333,36 @@
 
   li {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: $s-size;
     padding: 0.8rem 0;
     border-bottom: 1px solid $border-color;
+  }
+}
+
+.admin-order-modal-item-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid $border-color;
+  flex-shrink: 0;
+}
+
+.admin-order-modal-item-content {
+  min-width: 0;
+  flex: 1;
+
+  span,
+  small {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  small {
+    color: $gray-01;
   }
 }
