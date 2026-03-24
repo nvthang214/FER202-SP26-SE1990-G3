@@ -37,6 +37,21 @@ Optional: use a custom API base URL
 VITE_API_BASE_URL=http://localhost:3001
 ```
 
+Optional: configure real password reset emails (EmailJS)
+
+```sh
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
+```
+
+Email template variables expected by the app:
+
+- `to_email`
+- `reset_code`
+- `app_name`
+- `expires_in_minutes`
+
 ---
 
 ## Build the project

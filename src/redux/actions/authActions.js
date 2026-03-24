@@ -61,3 +61,8 @@ export const resetPassword = (email) => ({
   type: type.RESET_PASSWORD,
   payload: email,
 });
+
+export const confirmResetPassword = (payload) => ({
+  type: type.CONFIRM_RESET_PASSWORD,
+  payload,
+});

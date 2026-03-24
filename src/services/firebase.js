@@ -1,6 +1,8 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 const AUTH_STORAGE_KEY = "salinaka_auth_user";
+const RESET_CODE_TTL_MS = 10 * 60 * 1000;
+const EMAILJS_API_URL = "https://api.emailjs.com/api/v1.0/email/send";
 
 const toAuthError = (code, message) => ({ code, message });
 
@@ -271,7 +273,183 @@ class JsonServerService {
     this.notifyAuthListeners();
   };
 
-  passwordReset = async () => null;
+  getResetEmailConfig = () => ({
+    serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+  });
+
+  sendPasswordResetCodeEmail = async (email, code) => {
+    const config = this.getResetEmailConfig();
+    const missingConfig =
+      !config.serviceId || !config.templateId || !config.publicKey;
+    const expiresAtText = new Date(Date.now() + RESET_CODE_TTL_MS).toLocaleString("vi-VN", {
+      hour12: false,
+    });
+
+    if (missingConfig) {
+      throw toAuthError(
+        "auth/email-service-not-configured",
+        "EmailJS configuration is missing.",
+      );
+    }
+
+    const response = await fetch(EMAILJS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.publicKey,
+        template_params: {
+          to_email: email,
+          recipient_email: email,
+          user_email: email,
+          to: email,
+          reset_code: code,
+          passcode: code,
+          otp: code,
+          app_name: "Salinaka",
+          expires_in_minutes: Math.round(RESET_CODE_TTL_MS / 60000),
+          time: expiresAtText,
+          expires_at: expiresAtText,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw toAuthError(
+        "auth/network-request-failed",
+        "Failed to send password reset email.",
+      );
+    }
+  };
+
+  generateResetCode = () =>
+    String(Math.floor(100000 + Math.random() * 900000));
+
+  passwordReset = async (email) => {
+    const normalizedEmail = String(email || "").trim().toLowerCase();
+
+    if (!normalizedEmail) {
+      throw toAuthError(
+        "auth/reset-password-error",
+        "Please provide a valid email address.",
+      );
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+      throw toAuthError(
+        "auth/reset-password-error",
+        "Please provide a valid email address.",
+      );
+    }
+
+    const users = await this.request(
+      `/users?email=${encodeURIComponent(normalizedEmail)}`,
+    );
+    const user = users[0];
+
+    if (!user || user.provider !== "password") {
+      throw toAuthError(
+        "auth/reset-password-error",
+        "Failed to send password reset email. Did you type your email correctly?",
+      );
+    }
+
+    const resetCode = this.generateResetCode();
+    const expiresAt = Date.now() + RESET_CODE_TTL_MS;
+
+    await this.request(`/users/${user.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        resetPassword: {
+          code: resetCode,
+          expiresAt,
+          requestedAt: new Date().toISOString(),
+        },
+      }),
+    });
+
+    try {
+      await this.sendPasswordResetCodeEmail(normalizedEmail, resetCode);
+    } catch (error) {
+      await this.request(`/users/${user.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ resetPassword: null }),
+      });
+      throw error;
+    }
+
+    return null;
+  };
+
+  confirmPasswordReset = async (email, code, newPassword) => {
+    const normalizedEmail = String(email || "").trim().toLowerCase();
+    const normalizedCode = String(code || "").trim();
+    const normalizedPassword = String(newPassword || "").trim();
+
+    if (!normalizedEmail || !normalizedCode || !normalizedPassword) {
+      throw toAuthError(
+        "auth/reset-password-error",
+        "Missing required fields for password reset.",
+      );
+    }
+
+    if (normalizedPassword.length < 8 || !/[A-Z\W]/g.test(normalizedPassword)) {
+      throw toAuthError(
+        "auth/weak-password",
+        "Password does not meet requirements.",
+      );
+    }
+
+    const users = await this.request(
+      `/users?email=${encodeURIComponent(normalizedEmail)}`,
+    );
+    const user = users[0];
+
+    if (!user || user.provider !== "password") {
+      throw toAuthError(
+        "auth/reset-password-error",
+        "Failed to reset password for this account.",
+      );
+    }
+
+    const resetData = user.resetPassword;
+
+    if (!resetData?.code) {
+      throw toAuthError(
+        "auth/invalid-action-code",
+        "Reset code is invalid.",
+      );
+    }
+
+    if (Date.now() > Number(resetData.expiresAt)) {
+      throw toAuthError(
+        "auth/reset-code-expired",
+        "Reset code has expired.",
+      );
+    }
+
+    if (String(resetData.code).trim() !== normalizedCode) {
+      throw toAuthError(
+        "auth/invalid-action-code",
+        "Reset code is invalid.",
+      );
+    }
+
+    await this.request(`/users/${user.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        password: normalizedPassword,
+        resetPassword: null,
+      }),
+    });
+
+    return null;
+  };
 
   addUser = async (id, user) => {
     try {
@@ -688,3 +866,6 @@ deleteReview = async (productId, reviewId) => {
 const firebaseInstance = new JsonServerService();
 
 export default firebaseInstance;
+
+
+
