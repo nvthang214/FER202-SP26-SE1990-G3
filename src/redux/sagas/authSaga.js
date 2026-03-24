@@ -1,4 +1,5 @@
 import {
+  CONFIRM_RESET_PASSWORD,
   ON_AUTHSTATE_FAIL,
   ON_AUTHSTATE_SUCCESS,
   RESET_PASSWORD,
@@ -60,6 +61,40 @@ function* handleError(e) {
           ...obj,
           message:
             "Failed to send password reset email. Did you type your email correctly?",
+        }),
+      );
+      break;
+    case "auth/email-service-not-configured":
+      yield put(
+        setAuthStatus({
+          ...obj,
+          message:
+            "Reset email service is not configured. Please set EmailJS environment variables.",
+        }),
+      );
+      break;
+    case "auth/invalid-action-code":
+      yield put(
+        setAuthStatus({
+          ...obj,
+          message: "Verification code is invalid. Please check and try again.",
+        }),
+      );
+      break;
+    case "auth/reset-code-expired":
+      yield put(
+        setAuthStatus({
+          ...obj,
+          message: "Verification code has expired. Please request a new code.",
+        }),
+      );
+      break;
+    case "auth/weak-password":
+      yield put(
+        setAuthStatus({
+          ...obj,
+          message:
+            "Password must be at least 8 characters and include at least one uppercase letter or special character.",
         }),
       );
       break;
@@ -163,14 +198,35 @@ function* authSaga({ type, payload }) {
         yield put(
           setAuthStatus({
             success: true,
-            type: "reset",
-            message:
-              "Password reset email has been sent to your provided email.",
+            type: "reset-request",
+            message: "Verification code has been sent to your email.",
           }),
         );
         yield put(setAuthenticating(false));
       } catch (e) {
-        handleError({ code: "auth/reset-password-error" });
+        yield handleError(e?.code ? e : { code: "auth/reset-password-error" });
+      }
+      break;
+    }
+    case CONFIRM_RESET_PASSWORD: {
+      try {
+        yield initRequest();
+        yield call(
+          firebase.confirmPasswordReset,
+          payload.email,
+          payload.code,
+          payload.newPassword,
+        );
+        yield put(
+          setAuthStatus({
+            success: true,
+            type: "reset-complete",
+            message: "Password updated successfully. You can now sign in.",
+          }),
+        );
+        yield put(setAuthenticating(false));
+      } catch (e) {
+        yield handleError(e?.code ? e : { code: "auth/reset-password-error" });
       }
       break;
     }
@@ -178,7 +234,6 @@ function* authSaga({ type, payload }) {
       const snapshot = yield call(firebase.getUser, payload.uid);
 
       if (snapshot.data()) {
-        // if user exists in database
         const user = snapshot.data();
 
         yield put(setProfile(user));
@@ -195,7 +250,6 @@ function* authSaga({ type, payload }) {
         payload.providerData[0].providerId !== "password" &&
         !snapshot.data()
       ) {
-        // add the user if auth provider is not password
         const user = {
           fullname: payload.displayName ? payload.displayName : "User",
           avatar: payload.photoURL ? payload.photoURL : defaultAvatar,
