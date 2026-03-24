@@ -103,9 +103,102 @@
       ],
       "orders": [
         {
+          "id": "288afa33-0b7a-4a88-b289-5fdee924a4c7",
+          "createdAt": "2026-03-23T16:11:19.301Z",
+          "status": "RETURNED",
+          "paymentType": "PAYPAL",
+          "subtotal": 520000,
+          "shippingFee": 0,
+          "total": 520000,
+          "customer": {
+            "id": "b5a6f900-1c38-42f4-a34b-1228b540dec8",
+            "name": "Nguyen Truong Giang",
+            "email": "user1@salinaka.local",
+            "mobile": {
+              "dialCode": "84",
+              "countryCode": "vn",
+              "country": "Vietnam",
+              "value": "0377591436"
+            },
+            "address": "Tân Minh, Tân Kỳ, Thanh Hóa"
+          },
+          "shipping": {
+            "fullname": "Nguyen Truong Giang",
+            "email": "user1@salinaka.local",
+            "mobile": {
+              "dialCode": "84",
+              "countryCode": "vn",
+              "country": "Vietnam",
+              "value": "0377591436"
+            },
+            "address": "Tân Minh, Tân Kỳ, Thanh Hóa",
+            "isInternational": false
+          },
+          "items": [
+            {
+              "id": "product-004--38",
+              "name": "Betsin Maalat Cargo Pants",
+              "image": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80",
+              "brand": "Betsin Maalat",
+              "price": 520000,
+              "quantity": 1,
+              "selectedColor": "",
+              "selectedSize": 38
+            }
+          ],
+          "updatedAt": "2026-03-23T16:11:31.224Z",
+          "returnReason": "Found cheaper elsewhere"
+        },
+        {
+          "id": "7a0a1482-b160-443b-ae79-aa29d9dfe259",
+          "createdAt": "2026-03-23T16:05:32.207Z",
+          "status": "RETURNED",
+          "paymentType": "PAYPAL",
+          "subtotal": 150000,
+          "shippingFee": 0,
+          "total": 150000,
+          "customer": {
+            "id": "b5a6f900-1c38-42f4-a34b-1228b540dec8",
+            "name": "Nguyen Truong Giang",
+            "email": "user1@salinaka.local",
+            "mobile": {
+              "dialCode": "84",
+              "countryCode": "vn",
+              "country": "Vietnam",
+              "value": "0377591436"
+            },
+            "address": "Tân Minh, Tân Kỳ, Thanh Hóa"
+          },
+          "shipping": {
+            "fullname": "Nguyen Truong Giang",
+            "email": "user1@salinaka.local",
+            "mobile": {
+              "dialCode": "84",
+              "countryCode": "vn",
+              "country": "Vietnam",
+              "value": "0377591436"
+            },
+            "address": "Tân Minh, Tân Kỳ, Thanh Hóa",
+            "isInternational": false
+          },
+          "items": [
+            {
+              "id": "product-010--56",
+              "name": "Black Kibal Minimal Cap",
+              "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=800&q=80",
+              "brand": "Black Kibal",
+              "price": 150000,
+              "quantity": 1,
+              "selectedColor": "",
+              "selectedSize": 56
+            }
+          ],
+          "updatedAt": "2026-03-23T16:06:48.072Z"
+        },
+        {
           "id": "ab2c1e60-dfa5-4fdf-a8e7-a263afe81c56",
           "createdAt": "2026-03-22T14:30:48.452Z",
-          "status": "PLACED",
+          "status": "RETURNED",
           "paymentType": "PAYPAL",
           "subtotal": 150000,
           "shippingFee": 0,
@@ -145,7 +238,8 @@
               "selectedColor": "",
               "selectedSize": 56
             }
-          ]
+          ],
+          "updatedAt": "2026-03-23T16:07:32.659Z"
         }
       ]
     },

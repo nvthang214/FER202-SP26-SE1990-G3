@@ -9,7 +9,7 @@ const formatCurrency = (value) =>
 
 const normalizeStatus = (status = "") => String(status).toUpperCase();
 const isFinalStatus = (status = "") =>
-  ["DELIVERED", "CANCELLED"].includes(normalizeStatus(status));
+  ["DELIVERED", "CANCELLED", "RETURNED"].includes(normalizeStatus(status));
 
 const orderTotal = (order) => {
   if (typeof order.total === "number") {
@@ -196,6 +196,7 @@ const AdminOrders = () => {
             <option value="PROCESSING">Processing</option>
             <option value="DELIVERED">Delivered</option>
             <option value="CANCELLED">Cancelled</option>
+            <option value="RETURNED">Returned</option>
           </select>
         </div>
       </div>
