@@ -8,13 +8,19 @@ const formatCurrency = (value) =>
   `${Math.round(value || 0).toLocaleString("vi-VN")} đ`;
 const THUMB_PLACEHOLDER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Crect width='72' height='72' rx='10' fill='%23f3f4f6'/%3E%3Cpath d='M18 46l11-12 8 8 7-7 10 11H18z' fill='%239ca3af'/%3E%3Ccircle cx='27' cy='26' r='5' fill='%23cbd5e1'/%3E%3C/svg%3E";
-const STATUS_OPTIONS = ["ALL", "PLACED", "PROCESSING", "DELIVERED", "CANCELLED"];
+const STATUS_OPTIONS = [
+  "ALL",
+  "PLACED",
+  "PROCESSING",
+  "DELIVERED",
+  "CANCELLED",
+];
 const TIME_OPTIONS = ["TODAY", "7D", "30D", "ALL"];
 const SORT_OPTIONS = ["NEWEST", "OLDEST", "HIGHEST"];
 
 const normalizeStatus = (status = "") => String(status).toUpperCase();
 const isFinalStatus = (status = "") =>
-  ["DELIVERED", "CANCELLED"].includes(normalizeStatus(status));
+  ["DELIVERED", "CANCELLED", "RETURNED"].includes(normalizeStatus(status));
 
 const orderTotal = (order) => {
   if (typeof order.total === "number") {
@@ -32,8 +38,7 @@ const orderTotal = (order) => {
   return itemsTotal + Number(order.shippingFee || 0);
 };
 
-const orderItems = (order) =>
-  Array.isArray(order.items) ? order.items : [];
+const orderItems = (order) => (Array.isArray(order.items) ? order.items : []);
 
 const orderItemCount = (order) =>
   orderItems(order).reduce((sum, item) => sum + Number(item.quantity || 1), 0);
@@ -59,9 +64,15 @@ const getTimeFilterStartMs = (timeFilter) => {
 const getOrderTime = (order) =>
   new Date(order.createdAt || order.updatedAt || 0).getTime();
 
-const isOptionValid = (value, options) => options.includes(String(value || "").toUpperCase());
+const isOptionValid = (value, options) =>
+  options.includes(String(value || "").toUpperCase());
 
-const isDefaultFilterState = ({ searchText, sortBy, statusFilter, timeFilter }) =>
+const isDefaultFilterState = ({
+  searchText,
+  sortBy,
+  statusFilter,
+  timeFilter,
+}) =>
   searchText.trim() === "" &&
   sortBy === "NEWEST" &&
   statusFilter === "ALL" &&
@@ -374,12 +385,17 @@ const AdminOrders = () => {
             >
               {status === "ALL"
                 ? "All"
-                : `${status.charAt(0)}${status.slice(1).toLowerCase()}`} ({statusCounts[status] || 0})
+                : `${status.charAt(0)}${status.slice(1).toLowerCase()}`}{" "}
+              ({statusCounts[status] || 0})
             </button>
           ))}
         </div>
 
-        <div className="admin-orders-sort-group" role="group" aria-label="Sort orders">
+        <div
+          className="admin-orders-sort-group"
+          role="group"
+          aria-label="Sort orders"
+        >
           {[
             { key: "NEWEST", label: "New" },
             { key: "OLDEST", label: "Old" },
@@ -440,10 +456,12 @@ const AdminOrders = () => {
                       </div>
 
                       <p>
-                        <strong>{order.customer?.name}</strong> • {order.customer?.email}
+                        <strong>{order.customer?.name}</strong> •{" "}
+                        {order.customer?.email}
                       </p>
                       <p>
-                        {order.createdAt ? displayDate(order.createdAt) : "-"} • {order.paymentType || "-"}
+                        {order.createdAt ? displayDate(order.createdAt) : "-"} •{" "}
+                        {order.paymentType || "-"}
                       </p>
                       <p>
                         {firstItem.name || "Order item"}
@@ -584,7 +602,8 @@ const AdminOrders = () => {
                   <div className="admin-order-modal-item-content">
                     <span>{item.name}</span>
                     <small>
-                      Qty: {Number(item.quantity || 1)} • Unit: {formatCurrency(Number(item.price || 0))}
+                      Qty: {Number(item.quantity || 1)} • Unit:{" "}
+                      {formatCurrency(Number(item.price || 0))}
                     </small>
                   </div>
                   <span>
